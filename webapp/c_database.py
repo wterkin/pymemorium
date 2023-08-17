@@ -1,4 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy  # noqa
+from flask_sqlalchemy import SQLAlchemy
 # 1. Справочник тэгов
 # 2. Справочник типов материалов - заметка, ссылка, файл
 # 3. Главная таблица, в которой будут связаны тэги, типы и ...
@@ -11,11 +11,12 @@ from flask_sqlalchemy import SQLAlchemy  # noqa
 # class CFolder(CAncestor)
 # class CDocuments(CAncestor):
 # class CMaster(CAncestor):
-import c_config as cfg
+from webapp import c_config as wacfg
 
 # 'sqlite:///'+self.config.restore_value(c_config.DATABASE_FILE_KEY)
 
-database: object = None
+
+database: object
 
 
 class CAncestor(database.Model):
