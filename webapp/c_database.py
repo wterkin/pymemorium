@@ -53,6 +53,7 @@ class CTags(CAncestor):
     __tablename__ = 'tbl_tags'
     fname = database.Column(database.String(64), nullable=False)
 
+
     def __repr__(self):
         ancestor_repr = super().__repr__()
         return f"""{ancestor_repr},
