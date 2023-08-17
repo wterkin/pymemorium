@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 """Запускающий модуль приложения."""
 import os
+
+# from flask import send_from_directory
+
 from webapp import application
 from webapp import c_constants as waconst
-# from flask import send_from_directory
 from webapp import c_config as wacfg
-
-
-@application.route('/')
-def index():
-
-    return "Hello World!!!!"
 
 
 if __name__ == '__main__':

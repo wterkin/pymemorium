@@ -1,29 +1,33 @@
 # -*- coding: utf-8 -*-
 """Модуль пакета веб-приложения."""
 
-from flask import Flask  # noqa
-from flask_sqlalchemy import SQLAlchemy # noqa
-
-from webapp import c_constants as waconst
 from webapp import c_config as wacfg
-# from c_config import Config
-# import wacfg
-# from webapp import c_database as wadb
+
+from flask import Flask  # noqa
+from flask_bootstrap import Bootstrap4
+from flask_sqlalchemy import SQLAlchemy  # noqa
 
 LOG_SIZE = 1024 * 1024
 FORMATSTR = ("%(asctime)s %(levelname)s: "
              "%(message)s [in %(pathname)s:%(lineno)d]")
 
+
 application = Flask(__name__)
 application.config.from_object(wacfg.Config)
 # cdb.database = SQLAlchemy(application)
+bootstrap = Bootstrap4(application)
+
+from webapp import c_constants as waconst   # noqa: E402,F401
+from webapp import c_index as waidx  # noqa: E402,F401
+
+# from webapp import c_database as wadb
 
 
 if not application.debug:
-
     import logging
 
     from logging.handlers import RotatingFileHandler
+
     file_handler = RotatingFileHandler(wacfg.Config.LOGS_PATH, 'a', LOG_SIZE, 10)
     file_handler.setFormatter(logging.Formatter(FORMATSTR))
     application.logger.setLevel(logging.INFO)
