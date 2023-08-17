@@ -14,16 +14,16 @@ FORMATSTR = ("%(asctime)s %(levelname)s: "
 
 application = Flask(__name__)
 application.config.from_object(wacfg.Config)
-# cdb.database = SQLAlchemy(application)
 bootstrap = Bootstrap4(application)
+# cdb.database = SQLAlchemy(application)
 
 from webapp import c_constants as waconst   # noqa: E402,F401
 from webapp import c_index as waidx  # noqa: E402,F401
-
 # from webapp import c_database as wadb
 
 
 if not application.debug:
+
     import logging
 
     from logging.handlers import RotatingFileHandler
@@ -33,4 +33,4 @@ if not application.debug:
     application.logger.setLevel(logging.INFO)
     file_handler.setLevel(logging.INFO)
     application.logger.addHandler(file_handler)
-    application.logger.info('PyMemorium started...')
+    application.logger.info(f'{wacfg.Config.APPLICATION_NAME} started...')
