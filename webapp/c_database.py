@@ -1,4 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
+
+
 # 1. Справочник тэгов
 # 2. Справочник типов материалов - заметка, ссылка, файл
 # 3. Главная таблица, в которой будут связаны тэги, типы и ...
@@ -11,25 +12,47 @@ from flask_sqlalchemy import SQLAlchemy
 # class CFolder(CAncestor)
 # class CDocuments(CAncestor):
 # class CMaster(CAncestor):
-from webapp import c_config as wacfg
+
+from datetime import datetime
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+# from webapp import c_config as wacfg
 
 # 'sqlite:///'+self.config.restore_value(c_config.DATABASE_FILE_KEY)
 
 
-database: object
+database: SQLAlchemy
 
 
-class CAncestor(database.Model):
+def initialize_database(papplication: Flask):
+    """Создаёт экземпляр класса SQLAlchemy."""
+
+    global database
+    database = SQLAlchemy(papplication)
+
+
+class CAncestor(database.Model):  # noqa
     """Класс-предок всех классов-таблиц Alchemy."""
     __abstract__ = True
-    id = database.Column(database.Integer,
+    id = database.Column(database.Integer(),
                          primary_key=True,
                          autoincrement=True,
                          nullable=False,
                          unique=True)
-    fstatus = database.Column(database.Integer,
+    fname = database.Column(database.String(64), nullable=False)
+    fstatus = database.Column(database.Integer(),
                               nullable=False,
                               )
+    fcreated = database.Column(database.DateTime(),
+                               default=datetime.now)
+    fupdated = database.Column(database.DateTime(),
+                               default=datetime.now,
+                               update=datetime.now)
+    __table_args__ = (
+        database.Index('idx_fname', 'fname'),
+    )
 
     def __init__(self, pstatus):
         """Конструктор."""
@@ -37,28 +60,90 @@ class CAncestor(database.Model):
 
     def __repr__(self):
         return f"""ID:{self.id},
-                   Status:{self.fstatus}"""
+                   Name:{self.fname},
+                   Status:{self.fstatus},
+                   Created:{self.fcreated},
+                   Updated:{self.updated}"""
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'fname': self.fname,
+            'fstatus': self.fstatus,
+            'created': self.fcreated,
+            'updated': self.fupdated
+        }
 
 
-class CTypes(CAncestor):
+class CType(CAncestor):
+    """Класс справочника типов единиц хранения."""
     __tablename__ = 'tbl_types'
-    fname = database.Column(database.String(64), nullable=False)
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
-        return f"""{ancestor_repr},
-                   Name:{self.fname}"""
+        return f"""{ancestor_repr}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        return ancestor_serialize
 
 
-class CTags(CAncestor):
+class CTag(CAncestor):
+    """Класс справочника тэгов."""
     __tablename__ = 'tbl_tags'
-    fname = database.Column(database.String(64), nullable=False)
 
+    def __repr__(self):
+        ancestor_repr = super().__repr__()
+        return f"""{ancestor_repr}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        return ancestor_serialize
+
+
+# class CTagLinks(CAncestor):
+
+
+class CNote(CAncestor):
+    """Класс хранения заметок."""
+    __tablename__ = 'tbl_notes'
+    fcontent = database.Column(database.Text(), nullable=False)
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
         return f"""{ancestor_repr},
                    Name:{self.fname}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        ancestor_serialize["content"] = self.fcontent
+        return ancestor_serialize
+
+
+class CWebLink(CAncestor):
+    """Класс хранения ссылок на web-ресурсы."""
+    __tablename__ = 'tbl_weblinks'
+    flink = database.Column(database.String(512), nullable=False)
+
+    def __repr__(self):
+        ancestor_repr = super().__repr__()
+        return f"""{ancestor_repr},
+                   Name:{self.flink}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        return ancestor_serialize
+
+
+
+# class CFolder(CAncestor)
+# class CDocuments(CAncestor):
+# class CMaster(CAncestor):
 
 """
 class Post(db.Model):

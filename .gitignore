@@ -1,6 +1,5 @@
+webapp/__pycache__/*
 __pycache__/*
 logs/*
-webapp/__pycache__/*
-/.idea/*
+.idea/*
 venv/*
-/bs.html
