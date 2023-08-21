@@ -15,6 +15,7 @@
 
 from datetime import datetime
 
+# from _ctypes import CFuncPtr
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -22,6 +23,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 # 'sqlite:///'+self.config.restore_value(c_config.DATABASE_FILE_KEY)
 
+from webapp import c_constants as waconst
 
 database: SQLAlchemy
 
@@ -41,26 +43,19 @@ class CAncestor(database.Model):  # noqa
                          autoincrement=True,
                          nullable=False,
                          unique=True)
-    fname = database.Column(database.String(64), nullable=False)
     fstatus = database.Column(database.Integer(),
-                              nullable=False,
-                              )
+                              default=waconst.DB_STATUS_ACTIVE)
     fcreated = database.Column(database.DateTime(),
                                default=datetime.now)
     fupdated = database.Column(database.DateTime(),
                                default=datetime.now,
                                update=datetime.now)
-    __table_args__ = (
-        database.Index('idx_fname', 'fname'),
-    )
 
-    def __init__(self, pstatus):
+    def __init__(self):
         """Конструктор."""
-        self.fstatus = pstatus
 
     def __repr__(self):
         return f"""ID:{self.id},
-                   Name:{self.fname},
                    Status:{self.fstatus},
                    Created:{self.fcreated},
                    Updated:{self.updated}"""
@@ -69,17 +64,45 @@ class CAncestor(database.Model):  # noqa
     def serialize(self):
         return {
             'id': self.id,
-            'fname': self.fname,
             'fstatus': self.fstatus,
             'created': self.fcreated,
             'updated': self.fupdated
         }
 
 
-class CType(CAncestor):
-    """Класс справочника типов единиц хранения."""
+class CFather(CAncestor):
+    """Родительский класс."""
+    __abstract__ = True
+    fname = database.Column(database.String(64), nullable=False)
+    __table_args__ = (
+        database.Index('idx_fname', 'fname'),
+    )
+
+    def __init__(self, pname):
+        """Конструктор."""
+        super().__init__()
+        self.fname = pname
+
+    def __repr__(self):
+        ancestor_repr = super().__repr__()
+        return f"""{ancestor_repr}
+                   Name: {self.fname}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        ancestor_serialize['fname'] = self.fname
+        return ancestor_serialize
+
+
+class CType(CFather):
+    """Класс модели таблицы справочника типов единиц хранения."""
     __tablename__ = 'tbl_types'
 
+    def __init__(self, pname):
+        """Конструктор."""
+        super().__init__(pname)
+
     def __repr__(self):
         ancestor_repr = super().__repr__()
         return f"""{ancestor_repr}"""
@@ -90,10 +113,14 @@ class CType(CAncestor):
         return ancestor_serialize
 
 
-class CTag(CAncestor):
-    """Класс справочника тэгов."""
+class CTag(CFather):
+    """Класс модели таблицы справочника тэгов."""
     __tablename__ = 'tbl_tags'
 
+    def __init__(self, pname):
+        """Конструктор."""
+        super().__init__(pname)
+
     def __repr__(self):
         ancestor_repr = super().__repr__()
         return f"""{ancestor_repr}"""
@@ -104,18 +131,20 @@ class CTag(CAncestor):
         return ancestor_serialize
 
 
-# class CTagLinks(CAncestor):
-
-
-class CNote(CAncestor):
-    """Класс хранения заметок."""
+class CNote(CFather):
+    """Класс модели таблицы хранения заметок."""
     __tablename__ = 'tbl_notes'
     fcontent = database.Column(database.Text(), nullable=False)
+
+    def __init__(self, pname, pcontent):
+        """Конструктор."""
+        super().__init__(pname)
+        self.fcontent = pcontent
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
         return f"""{ancestor_repr},
-                   Name:{self.fname}"""
+                   Name:{self.fcontent}"""
 
     @property
     def serialize(self):
@@ -124,10 +153,15 @@ class CNote(CAncestor):
         return ancestor_serialize
 
 
-class CWebLink(CAncestor):
-    """Класс хранения ссылок на web-ресурсы."""
+class CWebLink(CFather):
+    """Класс модели таблицы хранения ссылок на web-ресурсы."""
     __tablename__ = 'tbl_weblinks'
-    flink = database.Column(database.String(512), nullable=False)
+    flink = database.Column(database.String(1024), nullable=False)
+
+    def __init__(self, pname, plink):
+        """Конструктор."""
+        super().__init__(pname)
+        self.flink = plink
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
@@ -137,13 +171,46 @@ class CWebLink(CAncestor):
     @property
     def serialize(self):
         ancestor_serialize = super().serialize
+        ancestor_serialize["flink"] = self.flink
         return ancestor_serialize
 
 
+class CFolder(CFather):
+    """Класс модели таблицы путей к папкам хранения документов."""
+    __tablename__ = 'tbl_folders'
+    fpath = database.Column(database.String(1024), nullable=False)
 
-# class CFolder(CAncestor)
-# class CDocuments(CAncestor):
+    def __init__(self, pname, ppath):
+        """Конструктор."""
+        super().__init__(pname)
+        self.fpath = ppath
+
+    def __repr__(self):
+        ancestor_repr = super().__repr__()
+        return f"""{ancestor_repr},
+                   Path:{self.fpath}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        ancestor_serialize["fpath"] = self.fpath
+        return ancestor_serialize
+
+
+class CDocuments(CFather):
+    """Класс модели таблицы для хранения ссылок на локальные документы."""
+    __tablename__ = 'tbl_documents'
+    fdocument = database.Column(database.String(512), nullable=False)
+
+
 # class CMaster(CAncestor):
+
+
+# class CTagLinks(CAncestor):
+#     """Класс таблицы связок основной таблицы с таблицей тегов."""
+
+
+# class CDocuments(CAncestor):
 
 """
 class Post(db.Model):
