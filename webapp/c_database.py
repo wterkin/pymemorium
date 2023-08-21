@@ -73,10 +73,7 @@ class CAncestor(database.Model):  # noqa
 class CFather(CAncestor):
     """Родительский класс."""
     __abstract__ = True
-    fname = database.Column(database.String(64), nullable=False)
-    __table_args__ = (
-        database.Index('idx_fname', 'fname'),
-    )
+    fname = database.Column(database.String(64), nullable=False, index=True)
 
     def __init__(self, pname):
         """Конструктор."""
@@ -144,7 +141,7 @@ class CNote(CFather):
     def __repr__(self):
         ancestor_repr = super().__repr__()
         return f"""{ancestor_repr},
-                   Name:{self.fcontent}"""
+                   Note:{self.fcontent}"""
 
     @property
     def serialize(self):
@@ -166,7 +163,7 @@ class CWebLink(CFather):
     def __repr__(self):
         ancestor_repr = super().__repr__()
         return f"""{ancestor_repr},
-                   Name:{self.flink}"""
+                   Link:{self.flink}"""
 
     @property
     def serialize(self):
@@ -201,17 +198,60 @@ class CDocuments(CFather):
     """Класс модели таблицы для хранения ссылок на локальные документы."""
     __tablename__ = 'tbl_documents'
     fdocument = database.Column(database.String(512), nullable=False)
+    ffolder = database.Column(database.Integer(), database.ForeignKey('tbl_folders.id'), nullable=False)
+
+    def __init__(self, pname, pdocument):
+        """Конструктор."""
+        super().__init__(pname)
+        self.fdocument = pdocument
+
+    def __repr__(self):
+        ancestor_repr = super().__repr__()
+        return f"""{ancestor_repr},
+                   Document:{self.fdocument}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        ancestor_serialize["fdocument"] = self.fdocument
+        return ancestor_serialize
 
 
-# class CMaster(CAncestor):
+class CStorage(CFather):
+    """Класс модели таблицы хранилища."""
 
+    ftype = database.Column(database.Integer(), database.ForeignKey('tbl_types.id'))
+    fnote = database.Column(database.Integer(), database.ForeignKey('tbl_notes.id'), nullable=True)
+    fweblink = database.Column(database.Integer(), database.ForeignKey('tbl_weblinks.id'), nullable=True)
+    fdocument = database.Column(database.Integer(), database.ForeignKey('tbl_documents.id'), nullable=True)
+
+    def __init__(self, pname, ptype, pnote, pweblink, pdocument):
+        """Конструктор."""
+        super().__init__(pname)
+        self.ftype = ptype
+        self.fnote = pnote
+        self.fweblink = pweblink
+        self.fdocument = pdocument
+
+    def __repr__(self):
+        ancestor_repr = super().__repr__()
+        return f"""{ancestor_repr},
+                   Type:{self.ftype},
+                   Note:{self.fnote},
+                   Weblink:{self.fweblink},
+                   Document:{self.fdocument}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        ancestor_serialize["ftype"] = self.ftype
+        ancestor_serialize["fnote"] = self.fnote
+        ancestor_serialize["fweblink"] = self.fweblink
+        ancestor_serialize["fdocument"] = self.fdocument
+        return ancestor_serialize
 
 # class CTagLinks(CAncestor):
 #     """Класс таблицы связок основной таблицы с таблицей тегов."""
-
-
-# class CDocuments(CAncestor):
-
 """
 class Post(db.Model):
     __tablename__ = 'posts'
