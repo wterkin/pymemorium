@@ -1,16 +1,5 @@
-
-# 1. Справочник тэгов
-# 2. Справочник типов материалов - заметка, ссылка, файл
-# 3. Главная таблица, в которой будут связаны тэги, типы и ...
-# Подумаем.
-# class CTypes(CAncestor):
-# class CTags(CAncestor):
-# class CTagLinks(CAncestor):
-# class CNotes(CAncestor):
-# class CLinks(CAncestor):
-# class CFolder(CAncestor)
-# class CDocuments(CAncestor):
-# class CMaster(CAncestor):
+# -*- coding: utf-8 -*-
+"""Модуль классов моделей таблиц БД."""
 
 from datetime import datetime
 
@@ -241,20 +230,27 @@ class CStorage(CFather):
         ancestor_serialize["fdocument"] = self.fdocument
         return ancestor_serialize
 
-# class CTagLinks(CAncestor):
-#     """Класс таблицы связок основной таблицы с таблицей тегов."""
 
+class CTagLinks(CAncestor):
+    """Класс модели таблицы связок основной таблицы с таблицей тегов."""
+    ftag = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_tags.id'), nullable=False)
+    frecord = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_storage.id'), nullable=False)
 
-"""
-class Post(db.Model):
-    __tablename__ = 'posts'
-    id = db.Column(db.Integer(), primary_key=True)
-    title = db.Column(db.String(255), nullable=False)
-    slug = db.Column(db.String(255), nullable=False)
-    content = db.Column(db.Text(), nullable=False)
-    created_on = db.Column(db.DateTime(), default=datetime.utcnow)
-    updated_on = db.Column(db.DateTime(), default=datetime.utcnow, update=datetime.utcnow)
+    def __init__(self, ptag, precord):
+        """Конструктор."""
+        super().__init__()
+        self.ftag = ptag
+        self.frecord = precord
 
     def __repr__(self):
-    return "<{}:{}>".format(self.id,  self.title[:10])
-"""
+        ancestor_repr = super().__repr__()
+        return f"""{ancestor_repr},
+                   Tag:{self.ftag},
+                   Record:{self.frecord}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        ancestor_serialize["ftag"] = self.ftag
+        ancestor_serialize["frecord"] = self.frecord
+        return ancestor_serialize
