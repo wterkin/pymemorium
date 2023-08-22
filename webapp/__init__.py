@@ -16,6 +16,7 @@ application = Flask(__name__)
 application.config.from_object(wacfg.Config)
 bootstrap = Bootstrap4(application)
 wadb.database = SQLAlchemy(application)
+# database: wadb.CDatabase = wadb.CDatabase№()
 
 from webapp import c_constants as waconst   # noqa: E402,F401
 from webapp import c_index as waidx  # noqa: E402,F401
