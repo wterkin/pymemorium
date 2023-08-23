@@ -22,6 +22,8 @@ application.config.from_object(wacfg.Config)
 database = SQLAlchemy()
 database.init_app(application)
 
+from webapp import c_models as wamdl  # noqa: E402,F401
+
 # *** Если БД ещё не создана...
 if not Path(wacfg.Config.DB_PATH + wacfg.Config.DB_NAME).exists():
 
@@ -46,4 +48,3 @@ if not application.debug:
 # *** Включаем остальные модули приложения
 from webapp import c_constants as waconst  # noqa: E402,F401
 from webapp import c_index as waidx  # noqa: E402,F401
-from webapp import c_models as wamdl  # noqa: E402,F401

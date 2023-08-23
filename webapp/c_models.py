@@ -192,6 +192,7 @@ class CDocuments(CFather):
 class CStorage(CFather):
     """Класс модели таблицы хранилища."""
 
+    __tablename__ = 'tbl_storage'
     ftype = database.Column(database.Integer(), database.ForeignKey('tbl_types.id'))
     fnote = database.Column(database.Integer(), database.ForeignKey('tbl_notes.id'), nullable=True)
     fweblink = database.Column(database.Integer(), database.ForeignKey('tbl_weblinks.id'), nullable=True)
