@@ -12,24 +12,25 @@ from datetime import datetime
 # 'sqlite:///'+self.config.restore_value(c_config.DATABASE_FILE_KEY)
 
 from webapp import c_constants as waconst
-from webapp import c_database as wadb
+from webapp import database
 
 
-class CAncestor(wadb.database.Model):  # noqa
+class CAncestor(database.Model):  # noqa
     """Класс-предок всех классов-таблиц Alchemy."""
     __abstract__ = True
-    id = wadb.database.Column(wadb.database.Integer(),
-                              primary_key=True,
-                              autoincrement=True,
-                              nullable=False,
-                              unique=True)
-    fstatus = wadb.database.Column(wadb.database.Integer(),
-                                   default=waconst.DB_STATUS_ACTIVE)
-    fcreated = wadb.database.Column(wadb.database.DateTime(),
-                                    default=datetime.now)
-    fupdated = wadb.database.Column(wadb.database.DateTime(),
-                                    default=datetime.now,
-                                    update=datetime.now)
+    id = database.Column(database.Integer(),
+                         primary_key=True,
+                         autoincrement=True,
+                         nullable=False,
+                         unique=True)
+    fstatus = database.Column(database.Integer(),
+                              default=waconst.DB_STATUS_ACTIVE)
+    fcreated = database.Column(database.DateTime(),
+                               default=datetime.now)
+    fupdated = database.Column(database.DateTime(),
+                               default=datetime.now,
+                               # default=datetime.utcnow, onupdate=datetime.utcnow)
+                               onupdate=datetime.now)
 
     def __init__(self):
         """Конструктор."""
@@ -53,7 +54,7 @@ class CAncestor(wadb.database.Model):  # noqa
 class CFather(CAncestor):
     """Родительский класс."""
     __abstract__ = True
-    fname = wadb.database.Column(wadb.database.String(64), nullable=False, index=True)
+    fname = database.Column(database.String(64), nullable=False, index=True)
 
     def __init__(self, pname):
         """Конструктор."""
@@ -111,7 +112,7 @@ class CTag(CFather):
 class CNote(CFather):
     """Класс модели таблицы хранения заметок."""
     __tablename__ = 'tbl_notes'
-    fcontent = wadb.database.Column(wadb.database.Text(), nullable=False)
+    fcontent = database.Column(database.Text(), nullable=False)
 
     def __init__(self, pname, pcontent):
         """Конструктор."""
@@ -133,7 +134,7 @@ class CNote(CFather):
 class CWebLink(CFather):
     """Класс модели таблицы хранения ссылок на web-ресурсы."""
     __tablename__ = 'tbl_weblinks'
-    flink = wadb.database.Column(wadb.database.String(1024), nullable=False)
+    flink = database.Column(database.String(1024), nullable=False)
 
     def __init__(self, pname, plink):
         """Конструктор."""
@@ -155,7 +156,7 @@ class CWebLink(CFather):
 class CFolder(CFather):
     """Класс модели таблицы путей к папкам хранения документов."""
     __tablename__ = 'tbl_folders'
-    fpath = wadb.database.Column(wadb.database.String(1024), nullable=False)
+    fpath = database.Column(database.String(1024), nullable=False)
 
     def __init__(self, pname, ppath):
         """Конструктор."""
@@ -177,8 +178,8 @@ class CFolder(CFather):
 class CDocuments(CFather):
     """Класс модели таблицы для хранения ссылок на локальные документы."""
     __tablename__ = 'tbl_documents'
-    fdocument = wadb.database.Column(wadb.database.String(512), nullable=False)
-    ffolder = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_folders.id'), nullable=False)
+    fdocument = database.Column(database.String(512), nullable=False)
+    ffolder = database.Column(database.Integer(), database.ForeignKey('tbl_folders.id'), nullable=False)
 
     def __init__(self, pname, pdocument):
         """Конструктор."""
@@ -200,10 +201,10 @@ class CDocuments(CFather):
 class CStorage(CFather):
     """Класс модели таблицы хранилища."""
 
-    ftype = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_types.id'))
-    fnote = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_notes.id'), nullable=True)
-    fweblink = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_weblinks.id'), nullable=True)
-    fdocument = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_documents.id'), nullable=True)
+    ftype = database.Column(database.Integer(), database.ForeignKey('tbl_types.id'))
+    fnote = database.Column(database.Integer(), database.ForeignKey('tbl_notes.id'), nullable=True)
+    fweblink = database.Column(database.Integer(), database.ForeignKey('tbl_weblinks.id'), nullable=True)
+    fdocument = database.Column(database.Integer(), database.ForeignKey('tbl_documents.id'), nullable=True)
 
     def __init__(self, pname, ptype, pnote, pweblink, pdocument):
         """Конструктор."""
@@ -233,8 +234,8 @@ class CStorage(CFather):
 
 class CTagLinks(CAncestor):
     """Класс модели таблицы связок основной таблицы с таблицей тегов."""
-    ftag = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_tags.id'), nullable=False)
-    frecord = wadb.database.Column(wadb.database.Integer(), wadb.database.ForeignKey('tbl_storage.id'), nullable=False)
+    ftag = database.Column(database.Integer(), database.ForeignKey('tbl_tags.id'), nullable=False)
+    frecord = database.Column(database.Integer(), database.ForeignKey('tbl_storage.id'), nullable=False)
 
     def __init__(self, ptag, precord):
         """Конструктор."""

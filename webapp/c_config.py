@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 import os
 
 
@@ -14,3 +16,6 @@ class Config():
     DB_PATH: str = "D:\\home\\YandexDisk\\Private\\app_data\\PyMemorium\\"
     DB_NAME: str = "pymemorium.db"
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_PATH}{DB_NAME}"
+    FORMATSTR: str = ("%(asctime)s %(levelname)s: "
+                      "%(message)s [in %(pathname)s:%(lineno)d]")
+    LOG_SIZE: int = 1024 * 1024
