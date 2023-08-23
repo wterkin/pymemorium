@@ -1,0 +1,120 @@
+  <form id="toolbar"
+        method="post"
+        role="form">
+    <table class="toolbar_style">
+        <tr>
+            <!-- Строка для фильтрации по номеру контракта -->
+            <td>
+                <input class="common_input"
+					   form="toolbar"
+					   name="filter_value"
+					   placeholder="N договора"
+					   type="text"
+					   value="{{ session['idx.filter_value'] }}"
+					   
+				>
+            </td>
+            <td>
+                <button class="common_button"
+						form="toolbar"
+						name="filter_state"
+                        {% if session["idx.filter_state"] == True %}
+						title="Отключить фильтр"
+						{% else %}
+						title="Отфильтровать"
+                        {% endif %}
+						value="filter_state"
+				>
+                    <table>
+                        <tr> <td>
+                            <!-- Фильтр включён? -->
+                            {% if session["idx.filter_state"] == True %}
+                                <img src="static/view-filter_off.png">
+                            {% else %}
+                                <img src="static/view-filter_on.png ">
+                            {% endif %}
+                        </td> </tr>
+                    </table>
+                </button>
+            </td>
+            <!-- Добавить, справочник организации, выйти -->
+            <td>
+                <button class="common_button"
+						form="toolbar"
+						name="append"
+						title="Добавить договор"
+						value="Добавить"
+				>
+                    <table>
+                        <tr>
+                            <td>
+                                <img src="static/list-add.png">
+                            </td>
+                            <td> Добавить </td>
+                        </tr>
+                    </table>
+                </button>
+            </td>
+            <td>
+                <button class="common_button"
+						form="toolbar"
+						name="organizations"
+						title="Справочник организаций"
+						value="Организации"
+				>
+                    <table>
+                        <tr>
+                            <td>
+                                <img src="static/x-office-address-book.png">
+                            </td>
+                            <td> Организации </td>
+                        </tr>
+                    </table>
+                </button>
+            </td>
+            <td>
+                <button class="common_button"
+						form="toolbar"
+						name="logout"
+						title="Выйти из программы"
+						value="Выйти"
+				>
+                    <table>
+                        <tr>
+                            <td>
+                                <img src="static/system-log-out.png">
+                            </td>
+                            <td>  Выйти </td>
+                        </tr>
+                    </table>
+                </button>
+            </td>
+            <td>
+                <button class="common_button"
+						form="toolbar"
+						name="trash"
+				        {% if session["idx.trash_state"] == True %}
+				        title="Выйти из корзины"
+						{% else %}
+				        title="Войти в корзину"
+                        {% endif %}
+                		value="trash"
+				>
+                    <table>
+                        <tr>
+                            <td>
+                                <!-- Корзина включена? -->
+                                {% if session["idx.trash_state"] == True %}
+                                    <img src="static/user-trash-exit.png ">
+                                {% else %}
+                                    <img src="static/user-trash.png ">
+                                {% endif %}
+                            </td>
+                            <td> Корзина </td>
+                        </tr>
+                    </table>
+                </button>
+            </td>
+        </tr>
+    </table>
+  </form>

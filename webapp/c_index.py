@@ -3,16 +3,19 @@
 
 from flask import render_template
 from flask import request
+from flask import session
 # from flask import redirect
 # from flask import session
 # from flask import url_for
 
 from webapp import application
 from webapp import c_constants as waconst
+from webapp import c_config as wacfg
 
 
 def index_get():
     """Обработчик запросов GET."""
+    session["APPLICATION_NAME"] = wacfg.Config.APPLICATION_NAME
     return render_template(waconst.INDEX_PAGE)
 
 

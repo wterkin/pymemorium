@@ -1,27 +1,125 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        {% block head %}
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "base.html" %}
+{% block content %}
+  <tr>
+    <!-- Основной контент -->
+    <td>
+      <table class="grid_style">
+        <colgroup>
+          <col width="1%">
+          <col width="1%">
+          <col width="1%">
+          <col width="2%">
+          <col width="25%">
+          <col width="10%">
+          <col width="36%">
+          <col width="8%">
+          <col width="8%">
+          <col width="8%">
+        </colgroup>
+          <!-- Заголовки столбцов ▾-->
+          <tr id="header">
+            <!-- столбцы для кнопок -->
+            <td id="frame3d"></td>
+            <td id="frame3d"></td>
+            <td id="frame3d"></td>
+              {% for ls_title, ls_field, li_order, ls_align, lbl_enabled in po_columns %}
+                {% if lbl_enabled %}
+                  <td id="frame3d"> {{ ls_title }} </td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            <!-- Данные -->
+            {% for lo_row in po_data %}
+              <form method="post" role="form">
+                {% if pi_delete_query_id == lo_row[0] %}
+                  <tr id="selected_line_top">
+                    <td colspan="10">
+                      {% if session["idx.trash_state"] == True %}
+                        Вы действительно хотите восстановить эту запись?
+                      {% else %}
+                        Вы действительно хотите удалить эту запись?
+                      {% endif %}
+                      <button name="yes" value="yes">
+                          <img src="static\gtk-yes.png"> Да
+                      </button>
+                      <button name="no" value="no">
+                          <img src="static\stop.png"> Нет
+                      </button>
+                    </td>
+                  </tr>
+                  <tr id="selected_line_bottom">
+                    <td>
+                      <input name="hidden_id"
+                             type="hidden"
+                             value="{{ lo_row[0] }}">
+                    </td><td></td><td></td>
+                {% else %}
+                  {% if lo_row[1] == 1 %}
+                    {% if loop.index % 2 == 0: %}
+                      <tr id="treaty_line_even">
+                    {% else %}
+                      <tr id="treaty_line_odd">
+                    {% endif %}
+                  {% elif lo_row[1] == 2 %}
+                    {% if loop.index % 2 == 0: %}
+                      <tr id="contract_line_even">
+                    {% else %}
+                      <tr id="contract_line_odd">
+                    {% endif %}
+                  {% elif lo_row[1] == 3 %}
+                    {% if loop.index % 2 == 0: %}
+                      <tr id="agree_line_even">
+                    {% else %}
+                      <tr id="agree_line_odd">
+                    {% endif %}
+                  {% else %}
+                    {% if loop.index % 2 == 0: %}
+                      <tr id="addit_agree_line_even">
+                    {% else %}
+                      <tr id="addit_agree_line_odd">
+                    {% endif %}
+                  {% endif %}
+                  <!-- Выводим кнопки -->
+                  <input name="hidden_id"
+                         type="hidden"
+                         value="{{ lo_row[0] }}">
+                  {% if pi_delete_query_id == None %}
+                    {% include "enabled_edit_button.html" %}
+                    {% if lo_row[8] > 0 %}
+                      {% include "disabled_delete_button.html" %}
+                    {% else %}
+                      {% include "enabled_delete_button.html" %}
+                    {% endif %}
 
-        {% block styles %}
-            <!-- Bootstrap CSS -->
-            {{ bootstrap.load_css() }}
-        {% endblock %}
-
-        <title>Your page title</title>
-        {% endblock %}
-    </head>
-    <body>
-        <!-- Your page content -->
-        {% block content %}{% endblock %}
-
-        {% block scripts %}
-            <!-- Optional JavaScript -->
-            {{ bootstrap.load_js() }}
-        {% endblock %}
-HELLO
-    </body>
-</html>
+                    <td id="column">
+                      <button name="subcontracts"
+                              value="subcontracts">
+                        <img src="static/subdir_1.png">
+                      </button>
+                    </td>
+                  {% else %}
+                    {% include "disabled_edit_button.html" %}
+                    {% include "disabled_delete_button.html" %}
+                    <td id="column">
+                      <button disabled="True"
+                              name="subcontracts"
+                              value="subcontracts">
+                        <img src="static/subdir_1.png">
+                      </button>
+                    </td>
+                  {% endif %}
+                {% endif %}
+                <!-- Выводим данные -->
+                {% for lo_column in lo_row %}
+                  {% if po_columns[loop.index-1][4] > 0 %}
+                    <td id="{{ po_columns[loop.index-1][3] }}"> {{ lo_column }} </td>
+                  {% endif %}
+                {% endfor %}
+              </form>
+            </tr>
+            {% endfor %}
+      </table>
+    </td>
+  </tr>
+  </form>
+{% endblock %}

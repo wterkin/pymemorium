@@ -9,7 +9,7 @@ class Config:
     # *** На каком порту приложение будет работать
     PORT: int = 7777
     # *** Версия приложения
-    APPLICATION_REVISION: str = "0.11"
+    APPLICATION_REVISION: str = "0.0"
     # *** Естественно, секретный ключ
     SECRET_KEY = os.urandom(24)
     # *** Выводить ли тексты запросов при работе Алхимии?
