@@ -1,21 +1,26 @@
 # -*- coding: utf-8 -*-
 
-
 import os
 
 
-class Config():
-
+class Config:
+    # *** Название приложения
     APPLICATION_NAME: str = "PyMemorium"
+    # *** На каком порту приложение будет работать
     PORT: int = 7777
-    PROGRAM_VERSION: str = "0.11"
+    # *** Версия приложения
+    APPLICATION_REVISION: str = "0.11"
+    # *** Естественно, секретный ключ
     SECRET_KEY = os.urandom(24)
-    LOGS_PATH: str = "D:\\home\\projects\\pymemorium\\logs\\main.log"
-    # SOURCE_PATH = "/home/template/Dropbox/notebook"
+    # *** Выводить ли тексты запросов при работе Алхимии?
     ALCHEMY_ECHO: int = 1
+    # *** Параметры БД
     DB_PATH: str = "D:\\home\\YandexDisk\\Private\\app_data\\PyMemorium\\"
     DB_NAME: str = "pymemorium.db"
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_PATH}{DB_NAME}"
+    # *** Параметры логов
+    LOG_SIZE: int = 1024 * 1024
+    LOGS_PATH: str = "D:\\home\\projects\\pymemorium\\logs\\main.log"
     FORMATSTR: str = ("%(asctime)s %(levelname)s: "
                       "%(message)s [in %(pathname)s:%(lineno)d]")
-    LOG_SIZE: int = 1024 * 1024
+    # SOURCE_PATH = "/home/template/Dropbox/notebook"

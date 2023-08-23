@@ -30,7 +30,7 @@ if not Path(wacfg.Config.DB_PATH + wacfg.Config.DB_NAME).exists():
 
         database.create_all()
 
-# *** Нужно ли логгирование?
+# *** Нужно ли логирование?
 if not application.debug:
 
     import logging

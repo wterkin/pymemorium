@@ -3,14 +3,6 @@
 
 from datetime import datetime
 
-# from _ctypes import CFuncPtr
-# from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
-
-# from webapp import c_config as wacfg
-
-# 'sqlite:///'+self.config.restore_value(c_config.DATABASE_FILE_KEY)
-
 from webapp import c_constants as waconst
 from webapp import database
 
@@ -29,7 +21,6 @@ class CAncestor(database.Model):  # noqa
                                default=datetime.now)
     fupdated = database.Column(database.DateTime(),
                                default=datetime.now,
-                               # default=datetime.utcnow, onupdate=datetime.utcnow)
                                onupdate=datetime.now)
 
     def __init__(self):
@@ -52,7 +43,7 @@ class CAncestor(database.Model):  # noqa
 
 
 class CFather(CAncestor):
-    """Родительский класс."""
+    """Класс - предок моделей таблиц хранения и основной таблицы."""
     __abstract__ = True
     fname = database.Column(database.String(64), nullable=False, index=True)
 
