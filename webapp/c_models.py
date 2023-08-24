@@ -6,11 +6,8 @@ from datetime import datetime
 from sqlalchemy import Column, ForeignKey, Integer, String, \
                        DateTime, Text, MetaData
 from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy.orm import relationship
-# from sqlalchemy import create_engine
 
 from webapp import c_constants as waconst
-# from webapp import d
 
 # *** Шаблоны именования ключей, индексов и т.п.
 convention = {"all_column_names": lambda constraint,

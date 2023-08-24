@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 """Модуль пакета веб-приложения."""
-# *** Pathlib нужна для определения, существует ли уже БД
-from pathlib import Path
-
 # *** Flask
 from flask import Flask  # noqa
 
 # *** Конфиг приложения
 from webapp import c_config as wacfg
 from webapp import c_database as wadb
-
-# *** Bootstrap пока подождёт
-# from flask_bootstrap import Bootstrap4
 
 # *** Создадим экземпляр приложения
 application: Flask = Flask(__name__)

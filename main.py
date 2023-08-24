@@ -7,5 +7,5 @@ from webapp import c_config as wacfg
 
 if __name__ == '__main__':
 
-    print(f"***** {wacfg.Config.APPLICATION_NAME}, редакция от {wacfg.Config.APPLICATION_REVISION} Serving on {wacfg.Config.PORT} ...")
-    application.run(host='127.0.0.1', port=wacfg.Config.PORT, debug=True)
+    print(f"***** {wacfg.Config.APPLICATION_NAME}, редакция от {wacfg.Config.APPLICATION_REVISION} Serving on {wacfg.Config.APPLICATION_PORT} ...")
+    application.run(host=wacfg.Config.APPLICATION_HOST, port=wacfg.Config.APPLICATION_PORT, debug=wacfg.Config.APPLICATION_DEBUG)
