@@ -11,6 +11,12 @@ from flask import session
 from webapp import application
 from webapp import c_constants as waconst
 from webapp import c_config as wacfg
+from webapp import c_models as wamod
+
+
+def main_query():
+    """Возвращает выборку данных в соответствии с установками."""
+    query: object = wamod.CStorage
 
 
 def index_get():

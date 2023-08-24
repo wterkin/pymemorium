@@ -3,25 +3,45 @@
 
 from datetime import datetime
 
+from sqlalchemy import Column, ForeignKey, Integer, String, \
+                       DateTime, Text, MetaData
+from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.orm import relationship
+# from sqlalchemy import create_engine
+
 from webapp import c_constants as waconst
 from webapp import database
 
+# *** Шаблоны именования ключей, индексов и т.п.
+convention = {"all_column_names": lambda constraint,
+              table: "_".join([column.name for column in constraint.columns.values()]),
+              "ix": "ix__%(table_name)s__%(all_column_names)s",
+              "uq": "uq__%(table_name)s__%(all_column_names)s",
+              "cq": "cq__%(table_name)s__%(constraint_name)s",
+              "fk": ("fk__%(table_name)s__%(all_column_names)s__"
+                     "%(referred_table_name)s"),
+              "pk": "pk__%(table_name)s"
+              }
 
-class CAncestor(database.Model):  # noqa
+meta_data = MetaData(naming_convention=convention)
+Base = declarative_base(metadata=meta_data)
+
+
+class CAncestor(Base):  # noqa
     """Класс-предок всех классов-таблиц Alchemy."""
     __abstract__ = True
-    id = database.Column(database.Integer(),
-                         primary_key=True,
-                         autoincrement=True,
-                         nullable=False,
-                         unique=True)
-    fstatus = database.Column(database.Integer(),
-                              default=waconst.DB_STATUS_ACTIVE)
-    fcreated = database.Column(database.DateTime(),
-                               default=datetime.now)
-    fupdated = database.Column(database.DateTime(),
-                               default=datetime.now,
-                               onupdate=datetime.now)
+    id = Column(database.Integer(),
+                primary_key=True,
+                autoincrement=True,
+                nullable=False,
+                unique=True)
+    fstatus = Column(Integer(),
+                     default=waconst.DB_STATUS_ACTIVE)
+    fcreated = Column(DateTime(),
+                      default=datetime.now)
+    fupdated = Column(DateTime(),
+                      default=datetime.now,
+                      onupdate=datetime.now)
 
     def __init__(self):
         """Конструктор."""
@@ -45,7 +65,7 @@ class CAncestor(database.Model):  # noqa
 class CFather(CAncestor):
     """Класс - предок моделей таблиц хранения и основной таблицы."""
     __abstract__ = True
-    fname = database.Column(database.String(64), nullable=False, index=True)
+    fname = Column(String(64), nullable=False, index=True)
 
     def __init__(self, pname):
         """Конструктор."""
@@ -103,7 +123,7 @@ class CTag(CFather):
 class CNote(CFather):
     """Класс модели таблицы хранения заметок."""
     __tablename__ = 'tbl_notes'
-    fcontent = database.Column(database.Text(), nullable=False)
+    fcontent = Column(Text(), nullable=False)
 
     def __init__(self, pname, pcontent):
         """Конструктор."""
@@ -125,7 +145,7 @@ class CNote(CFather):
 class CWebLink(CFather):
     """Класс модели таблицы хранения ссылок на web-ресурсы."""
     __tablename__ = 'tbl_weblinks'
-    flink = database.Column(database.String(1024), nullable=False)
+    flink = Column(String(1024), nullable=False)
 
     def __init__(self, pname, plink):
         """Конструктор."""
@@ -147,7 +167,7 @@ class CWebLink(CFather):
 class CFolder(CFather):
     """Класс модели таблицы путей к папкам хранения документов."""
     __tablename__ = 'tbl_folders'
-    fpath = database.Column(database.String(1024), nullable=False)
+    fpath = Column(String(1024), nullable=False)
 
     def __init__(self, pname, ppath):
         """Конструктор."""
@@ -169,8 +189,8 @@ class CFolder(CFather):
 class CDocuments(CFather):
     """Класс модели таблицы для хранения ссылок на локальные документы."""
     __tablename__ = 'tbl_documents'
-    fdocument = database.Column(database.String(512), nullable=False)
-    ffolder = database.Column(database.Integer(), database.ForeignKey('tbl_folders.id'), nullable=False)
+    fdocument = Column(String(512), nullable=False)
+    ffolder = Column(Integer(), ForeignKey('tbl_folders.id'), nullable=False)
 
     def __init__(self, pname, pdocument):
         """Конструктор."""
@@ -193,10 +213,10 @@ class CStorage(CFather):
     """Класс модели таблицы хранилища."""
 
     __tablename__ = 'tbl_storage'
-    ftype = database.Column(database.Integer(), database.ForeignKey('tbl_types.id'))
-    fnote = database.Column(database.Integer(), database.ForeignKey('tbl_notes.id'), nullable=True)
-    fweblink = database.Column(database.Integer(), database.ForeignKey('tbl_weblinks.id'), nullable=True)
-    fdocument = database.Column(database.Integer(), database.ForeignKey('tbl_documents.id'), nullable=True)
+    ftype = Column(Integer(), ForeignKey('tbl_types.id'))
+    fnote = Column(Integer(), ForeignKey('tbl_notes.id'), nullable=True)
+    fweblink = Column(Integer(), ForeignKey('tbl_weblinks.id'), nullable=True)
+    fdocument = Column(Integer(), ForeignKey('tbl_documents.id'), nullable=True)
 
     def __init__(self, pname, ptype, pnote, pweblink, pdocument):
         """Конструктор."""
@@ -226,8 +246,8 @@ class CStorage(CFather):
 
 class CTagLinks(CAncestor):
     """Класс модели таблицы связок основной таблицы с таблицей тегов."""
-    ftag = database.Column(database.Integer(), database.ForeignKey('tbl_tags.id'), nullable=False)
-    frecord = database.Column(database.Integer(), database.ForeignKey('tbl_storage.id'), nullable=False)
+    ftag = Column(Integer(), ForeignKey('tbl_tags.id'), nullable=False)
+    frecord = Column(Integer(), ForeignKey('tbl_storage.id'), nullable=False)
 
     def __init__(self, ptag, precord):
         """Конструктор."""

@@ -6,28 +6,18 @@
         <!-- <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">-->
     </head>
     <body>
-        <!-- Таблица нижнего уровня -->
         <table class="page_markup_style">
             <tbody>
                 <tr>
-                    <!-- Тулбар -->
-                    <td>
-                        {# % include "toolbar.html" % #}
-                    </td>
+                    <td> {# % include "toolbar.html" % #} </td>
                 </tr>
                 <tr>
-                    <!-- Баннер -->
-                    <td id="impressed_banner">
-                        {{ session["APPLICATION_NAME"] }}
-                    </td>
+                    <td id="impressed_banner"> {{ session["APPLICATION_NAME"] }} </td>
                 </tr>
                 {% block content %}
                 {% endblock %}
                 <tr>
-                    <!-- Строка статуса -->
-                    <td>
-                       {# % include "statusbar.html" % #}
-                    </td>
+                    <td> {# % include "statusbar.html" % #} </td>
                 </tr>
             </tbody>
         </table>

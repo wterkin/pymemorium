@@ -5,7 +5,6 @@ from pathlib import Path
 
 # *** Flask
 from flask import Flask  # noqa
-from flask_sqlalchemy import SQLAlchemy  # noqa
 
 # *** Конфиг приложения
 from webapp import c_config as wacfg

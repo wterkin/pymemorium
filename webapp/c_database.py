@@ -1,9 +1,11 @@
 
 from pathlib import Path
-from webapp import c_config as wacfg
 
 from flask import Flask  # noqa
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.declarative import declarative_base
+
+from webapp import c_config as wacfg
+
 
 
 class CDatabaseManager:
