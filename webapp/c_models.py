@@ -10,7 +10,7 @@ from sqlalchemy.ext.declarative import declarative_base
 # from sqlalchemy import create_engine
 
 from webapp import c_constants as waconst
-from webapp import database
+# from webapp import d
 
 # *** Шаблоны именования ключей, индексов и т.п.
 convention = {"all_column_names": lambda constraint,
@@ -30,7 +30,7 @@ Base = declarative_base(metadata=meta_data)
 class CAncestor(Base):  # noqa
     """Класс-предок всех классов-таблиц Alchemy."""
     __abstract__ = True
-    id = Column(database.Integer(),
+    id = Column(Integer(),
                 primary_key=True,
                 autoincrement=True,
                 nullable=False,
@@ -246,6 +246,7 @@ class CStorage(CFather):
 
 class CTagLinks(CAncestor):
     """Класс модели таблицы связок основной таблицы с таблицей тегов."""
+    __tablename__ = 'tbl_taglinks'
     ftag = Column(Integer(), ForeignKey('tbl_tags.id'), nullable=False)
     frecord = Column(Integer(), ForeignKey('tbl_storage.id'), nullable=False)
 

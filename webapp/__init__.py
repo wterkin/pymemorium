@@ -8,6 +8,7 @@ from flask import Flask  # noqa
 
 # *** Конфиг приложения
 from webapp import c_config as wacfg
+from webapp import c_database as wadb
 
 # *** Bootstrap пока подождёт
 # from flask_bootstrap import Bootstrap4
@@ -15,21 +16,11 @@ from webapp import c_config as wacfg
 # *** Создадим экземпляр приложения
 application: Flask = Flask(__name__)
 application.config.from_object(wacfg.Config)
-# bootstrap = Bootstrap4(application)
 
-# *** Создаем объект базы данных
-database = SQLAlchemy()
-database.init_app(application)
+# *** Создаем объект менеджера базы данных
+db_manager = wadb.CDatabaseManager()
 
-from webapp import c_models as wamdl  # noqa: E402,F401
-
-# *** Если БД ещё не создана...
-if not Path(wacfg.Config.DB_PATH + wacfg.Config.DB_NAME).exists():
-
-    # *** Создаём её
-    with application.app_context():
-
-        database.create_all()
+from webapp import c_models as wamod  # noqa: E402,F401
 
 # *** Нужно ли логирование?
 if not application.debug:
