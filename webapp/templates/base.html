@@ -5,14 +5,15 @@
         <link href="{{ url_for('static', filename='main.css')}}" rel="stylesheet" type="text/css">
         <!-- <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">-->
     </head>
-    <body>
+    <body bgcolor="black">
         <table class="page_markup_style">
             <tbody>
                 <tr>
-                    <td> {# % include "toolbar.html" % #} </td>
+                    <td id="inner-dark-shadow"> {{ session["APPLICATION_NAME"] }} </td>
+                    <!--<td id="impressed_banner"> {{ session["APPLICATION_NAME"] }} </td>-->
                 </tr>
                 <tr>
-                    <td id="impressed_banner"> {{ session["APPLICATION_NAME"] }} </td>
+                    <td id="halleft"> {% include "toolbar.html" %} </td>
                 </tr>
                 {% block content %}
                 {% endblock %}

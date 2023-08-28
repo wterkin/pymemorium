@@ -4,14 +4,28 @@
     text-align: center;
     width: 100%;
 }
-
-#banner { font-size: xx-large;
-          font-style: italic;
-          background-color: #808080;
-          color: #000000;
-          text-shadow: 2px 2px 3px rgba(255,255,255,0.1);
+#halleft { text-align: left; }
+#inner-dark-shadow{
+          font-size: xx-large;
+          color: rgba(0,0,0,0.9);
+          background-color: #606060;
+          text-shadow: 1px 1px 2px rgba(255,255,255,0.2);
 }
 
+/**** Стиль панелей инструментов */
+.toolbar_style {
+    color: #FFFFFF;
+    background-color: #888080;
+    font: 14x "Liberation Sans", sans-serif;
+    text-align: left;
+    vertical-align: middle;
+}
+/*#icon { vertical-align: middle; }*/
+/*#status_bar { font: bold 18px "Liberation Sans"; text-align: center; }*/
+
+
+/*
+Trash
 #impressed_banner {
           font-size: xx-large;
           background-color: #101010;
@@ -20,7 +34,16 @@
           background-clip: text;
           color: transparent;
           text-shadow: 2px 2px 2px rgba(208,208,208,0.3) ;
+#banner { font-size: xx-large;
+          font-style: italic;
+          background-color: #808080;
+          color: #000000;
+          text-shadow: 2px 2px 3px rgba(255,255,255,0.1);
 }
+}
+
+
+*/
 
 /*
 #subbanner { font-size: x-large; font-style: italic; background-color: #B0B0B0; color: #303030; }
@@ -94,17 +117,7 @@
                       }
 #header { color: #046A88; font-weight: bold; }
 */
-/**** Стиль панелей инструментов */
 /*
-.toolbar_style {
-    color: #FFFFFF;
-    background-color: #545050;
-    font: 14x "Liberation Sans", sans-serif;
-    text-align: left;
-    vertical-align: middle;
-}
-#icon { vertical-align: middle; }
-#status_bar { font: bold 18px "Liberation Sans"; text-align: center; }
 
 
 .common_button {

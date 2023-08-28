@@ -18,7 +18,6 @@ from webapp import c_models as wamod  # noqa: E402,F401
 
 # *** Нужно ли логирование?
 if not application.debug:
-
     import logging
     from logging.handlers import RotatingFileHandler
 
