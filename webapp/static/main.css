@@ -16,12 +16,35 @@
 .toolbar_style {
     color: #FFFFFF;
     background-color: #888080;
-    font: 14x "Liberation Sans", sans-serif;
+    font: 16x "Liberation Sans", sans-serif;
     text-align: left;
     vertical-align: middle;
 }
+
+.nice_input_style {
+    background-color: #404040;
+    border: 2px solid #AAA;
+    border-radius:4px;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    color: #F0F0F0;
+    font: 16x "Liberation Sans", sans-serif;
+    /*font-family:inherit;
+    font-size: inherit;*/
+    margin:10px 0; /* add top and bottom margin*/
+    padding:10px;
+    width:80%;
+}
+
+.nice_button_style {
+	border-left: solid 1px #269BD0;
+	background: #46C1F6;
+	-webkit-box-shadow: 0px 5px 0px 0px #269BD0;
+	box-shadow: 0px 5px 0px 0px #269BD0;
+}
+
 /*#icon { vertical-align: middle; }*/
 /*#status_bar { font: bold 18px "Liberation Sans"; text-align: center; }*/
+
 
 
 /*

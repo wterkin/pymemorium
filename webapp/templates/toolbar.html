@@ -2,28 +2,31 @@
         method="post"
         role="form">
     <table class="toolbar_style">
-        <tr id="halleft">
-            <!-- Строка для фильтрации по номеру контракта -->
-            <td> 0
-<!--                <input class="common_input"-->
-<!--					   form="toolbar"-->
-<!--					   name="filter_value"-->
-<!--					   placeholder="N договора"-->
-<!--					   type="text"-->
-<!--					   value="{{ session['idx.filter_value'] }}"-->
-<!--					   -->
-<!--				>-->
+      <tr id="halleft">
+        <!-- Строка фильтрации по тегам -->
+        <td>
+          <!--
+          <input class="nice_input_style"
+                 form="toolbar"
+                 name="filter_value"
+                 placeholder="Теги"
+                 type="text"-->
+<!--                 value="{{ session['idx.filter_value'] }}">-->
             </td>
-            <td> 1
-<!--                <button class="common_button"-->
-<!--						form="toolbar"-->
-<!--						name="filter_state"-->
-<!--                        {% if session["idx.filter_state"] == True %}-->
-<!--						title="Отключить фильтр"-->
-<!--						{% else %}-->
-<!--						title="Отфильтровать"-->
-<!--                        {% endif %}-->
-<!--						value="filter_state"-->
+            <td>
+              <a href="#" class="button24"><span>Фильтр по тегам</span></a>
+              <!--
+              <button class="blue"
+			          form="toolbar"
+                      name="filter_state"
+					  title="Отключить фильтр"
+	                  value="filter_state"
+                      >Выключить фильтр</button> -->
+<!--                      {# % if session["idx.filter_state"] == True % #}-->
+<!--					  {# % else % #}-->
+<!--					  title="Отфильтровать"-->
+<!--                      {# % endif % #}-->
+<!--	                  value="filter_state"-->
 <!--				>-->
 <!--                    <table>-->
 <!--                        <tr> <td>-->
