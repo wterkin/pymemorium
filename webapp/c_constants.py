@@ -5,3 +5,6 @@ DB_STATUS_ACTIVE: int = 1
 
 INDEX_PAGE_URL: str = "/index"
 INDEX_PAGE = "index.html"
+
+# *** Константы сессии.
+SESSION_APPLICATION_NAME = "appname"

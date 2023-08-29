@@ -20,7 +20,7 @@ def main_query():
 
 def index_get():
     """Обработчик запросов GET."""
-    session["APPLICATION_NAME"] = wacfg.Config.APPLICATION_NAME
+
     return render_template(waconst.INDEX_PAGE)
 
 
