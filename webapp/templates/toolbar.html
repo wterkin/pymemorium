@@ -16,9 +16,10 @@
           <a href="#" class="cool_button">
             <table>
               <tr>
-                <td>
+                <td> %%%{{ session["idx_filter_state"] }}%%%
                   <!-- Фильтр включён? -->
                   {% if session["idx_filter_state"] == True %}
+
                     <img src="static/view-filter_off.png">
                   {% else %}
                     <img src="static/view-filter_on.png ">
@@ -26,9 +27,9 @@
                 </td>
                 <td>
                   {% if session["idx_filter_state"] == True %}
-                    Включить фильтр
-                  {% else %}
                     Отключить фильтр
+                  {% else %}
+                    Включить фильтр
                   {% endif %}
                 </td>
               </tr>

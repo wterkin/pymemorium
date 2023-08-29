@@ -20,12 +20,15 @@ def main_query():
 
 def index_get():
     """Обработчик запросов GET."""
-
+    print("***********************")
+    session[waconst.SESSION_IDX_FILTER_STATE] = True
+    print(session[waconst.SESSION_IDX_FILTER_STATE])
     return render_template(waconst.INDEX_PAGE)
 
 
 def index_post():
     """Обработчик запросов POST."""
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     return render_template(waconst.INDEX_PAGE)
 
 

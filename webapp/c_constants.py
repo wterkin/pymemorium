@@ -8,3 +8,4 @@ INDEX_PAGE = "index.html"
 
 # *** Константы сессии.
 SESSION_APPLICATION_NAME = "appname"
+SESSION_IDX_FILTER_STATE = "idx_filter_state"
