@@ -1,4 +1,4 @@
-a.button24 {
+a.cool_button {
   display: inline-block;
   color: white;
   text-decoration: none;
@@ -14,11 +14,11 @@ a.button24 {
   /*7F7F7F  7A7A7A */
   transition: 0.2s;
 } 
-a.button24:hover {
+a.cool_button:hover {
     /*background: linear-gradient(#f5ae00, #f59500) #f5ae00;*/
     background: linear-gradient(#686868, #606060) #606060;
 }
-a.button24:active {
+a.cool_button:active {
     /*background: linear-gradient(#f59500, #f5ae00) #f59500;*/
     background: linear-gradient(#585858, #686868) #f59500;
 }
