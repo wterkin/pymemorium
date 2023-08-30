@@ -1,0 +1,16 @@
+.cool_input {
+    background-color: #404040;
+   /* border: 2px solid #AAA*/;
+    border: 2px solid; /* #E0E0E0 #808080 #202020;*/
+    border-top-color: #404040;
+    border-right-color: #A0A0A0;
+    border-bottom-color: #E0E0E0;
+    border-left-color: #808080;
+    border-radius:4px;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    color: #F0F0F0;
+    font: 16x "Liberation Sans", sans-serif;
+    margin:10px 0; /* add top and bottom margin*/
+    padding:10px;
+    width:80%;
+}
