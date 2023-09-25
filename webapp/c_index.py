@@ -39,8 +39,19 @@ def main_query():
     # query = query.outerjoin(wamod.CTagLink, wamod.CTagLink.frecord == wamod.CStorage.id)
     # query = query.join(wamod.CTag, wamod.CTagLink.ftag == wamod.CTag.id)
     # , wamod.CTagLink, wamod.CTag
-    print(query.all())
-    print(query.one().fdocumentobj)
+    result = query.all()
+    for item in result:
+
+        if item.fweblink is not None:
+
+            print(item.fweblinkobj)
+        if item.fdocument is not None:
+
+            print(item.fdocumentobj)
+        if item.fnote is not None:
+
+            print(item.fnoteobj)
+    # print(query.one().fdocumentobj)
 
         # print()
 

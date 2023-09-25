@@ -60,10 +60,10 @@ class CAncestor(Base):  # noqa
         }
 
 
-class CFather(CAncestor):
-    """Класс - предок моделей таблиц хранения и основной таблицы."""
-    __abstract__ = True
-    fname = Column(String(64), nullable=False, index=True)
+class CTag(CAncestor):
+    """Класс модели таблицы справочника тэгов."""
+    __tablename__ = 'tbl_tags'
+    fname = Column(String(waconst.DB_NAME_SIZE), nullable=False)
 
     def __init__(self, pname):
         """Конструктор."""
@@ -72,118 +72,117 @@ class CFather(CAncestor):
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
-        return f"""{ancestor_repr}
+        return f"""* Tag *
+                   {ancestor_repr},
                    Name: {self.fname}"""
 
     @property
     def serialize(self):
         ancestor_serialize = super().serialize
-        ancestor_serialize['fname'] = self.fname
+        ancestor_serialize["name"] = self.fname
         return ancestor_serialize
 
 
-class CTag(CFather):
-    """Класс модели таблицы справочника тэгов."""
-    __tablename__ = 'tbl_tags'
-
-    def __init__(self, pname):
-        """Конструктор."""
-        super().__init__(pname)
-
-    def __repr__(self):
-        ancestor_repr = super().__repr__()
-        return f"""{ancestor_repr}"""
-
-    @property
-    def serialize(self):
-        ancestor_serialize = super().serialize
-        return ancestor_serialize
-
-
-class CNote(CFather):
+class CNote(CAncestor):
     """Класс модели таблицы хранения заметок."""
     __tablename__ = 'tbl_notes'
+    fname = Column(String(waconst.DB_NAME_SIZE), nullable=False)
     fcontent = Column(Text(), nullable=False)
 
     def __init__(self, pname, pcontent):
         """Конструктор."""
-        super().__init__(pname)
+        super().__init__()
+        self.fname = pname
         self.fcontent = pcontent
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
-        return f"""{ancestor_repr},
-                   Note:{self.fcontent}"""
+        return f"""* Note *
+                   {ancestor_repr},
+                   Name:{self.fname},
+                   Content:{self.fcontent}"""
 
     @property
     def serialize(self):
         ancestor_serialize = super().serialize
+        ancestor_serialize["name"] = self.fname
         ancestor_serialize["content"] = self.fcontent
         return ancestor_serialize
 
 
-class CWebLink(CFather):
+class CWebLink(CAncestor):
     """Класс модели таблицы хранения ссылок на web-ресурсы."""
     __tablename__ = 'tbl_weblinks'
+    fname = Column(String(waconst.DB_NAME_SIZE), nullable=False)
     flink = Column(String(1024), nullable=False)
 
     def __init__(self, pname, plink):
         """Конструктор."""
-        super().__init__(pname)
+        super().__init__()
+        self.fname = pname
         self.flink = plink
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
-        return f"""{ancestor_repr},
+        return f"""* WebLink *
+                   {ancestor_repr},
+                   Name:{self.fname},
                    Link:{self.flink}"""
 
     @property
     def serialize(self):
         ancestor_serialize = super().serialize
-        ancestor_serialize["flink"] = self.flink
+        ancestor_serialize["name"] = self.fname
+        ancestor_serialize["link"] = self.flink
         return ancestor_serialize
 
 
-class CFolder(CFather):
+class CFolder(CAncestor):
     """Класс модели таблицы путей к папкам хранения документов."""
     __tablename__ = 'tbl_folders'
+    fname = Column(String(waconst.DB_NAME_SIZE), nullable=False)
     fpath = Column(String(1024), nullable=False)
 
     def __init__(self, pname, ppath):
         """Конструктор."""
-        super().__init__(pname)
+        super().__init__()
+        self.fname = pname
         self.fpath = ppath
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
-        return f"""{ancestor_repr},
+        return f"""* Folder *
+                   {ancestor_repr},
+                   Name:{self.fname},
                    Path:{self.fpath}"""
 
     @property
     def serialize(self):
         ancestor_serialize = super().serialize
-        ancestor_serialize["fpath"] = self.fpath
+        ancestor_serialize["name"] = self.fname
+        ancestor_serialize["path"] = self.fpath
         return ancestor_serialize
 
 
-class CDocument(CFather):
+class CDocument(CAncestor):
     """Класс модели таблицы для хранения ссылок на локальные документы."""
     __tablename__ = 'tbl_documents'
+    fdescription = Column(Text(), nullable=False)
     fdocument = Column(String(512), nullable=False)
     ffolder = Column(Integer(), ForeignKey('tbl_folders.id'), nullable=False)
     ffolderobj = relationship("CFolder", foreign_keys=[ffolder])
-    fdescription = Column(String(512), default="")
 
     def __init__(self, pname, pdocument, pfolder, pdescription):
         """Конструктор."""
-        super().__init__(pname)
+        super().__init__()
         self.fdocument = pdocument
         self.ffolder = pfolder
         self.fdescription = pdescription
 
     def __repr__(self):
         ancestor_repr = super().__repr__()
-        return f"""{ancestor_repr},
+        return f"""* Document *
+                   {ancestor_repr},
                    Document:{self.fdocument}
                    Folder:{self.ffolder}
                    Description:{self.fdescription}"""
@@ -191,11 +190,13 @@ class CDocument(CFather):
     @property
     def serialize(self):
         ancestor_serialize = super().serialize
-        ancestor_serialize["fdocument"] = self.fdocument
+        ancestor_serialize["document"] = self.fdocument
+        ancestor_serialize["folder"] = self.ffolder
+        ancestor_serialize["description"] = self.fdescription
         return ancestor_serialize
 
 
-class CStorage(CFather):
+class CStorage(CAncestor):
     """Класс модели таблицы хранилища."""
 
     __tablename__ = 'tbl_storage'
@@ -205,12 +206,10 @@ class CStorage(CFather):
     fweblinkobj = relationship("CWebLink", foreign_keys=[fweblink])
     fdocument = Column(Integer(), ForeignKey('tbl_documents.id'), nullable=True)
     fdocumentobj = relationship("CDocument", foreign_keys=[fdocument])
-    # ftaglinkobj = relationship("CTagLink", foreign_keys=[ ftag])/
-    # ftaglinksobj = relationship("СTagLink", backref="storage")
 
-    def __init__(self, pname, ptype, pnote, pweblink, pdocument):
+    def __init__(self, ptype, pnote, pweblink, pdocument):
         """Конструктор."""
-        super().__init__(pname)
+        super().__init__()
         self.ftype = ptype
         self.fnote = pnote
         self.fweblink = pweblink
@@ -254,6 +253,6 @@ class CTagLink(CAncestor):
     @property
     def serialize(self):
         ancestor_serialize = super().serialize
-        ancestor_serialize["ftag"] = self.ftag
-        ancestor_serialize["frecord"] = self.frecord
+        ancestor_serialize["tag"] = self.ftag
+        ancestor_serialize["record"] = self.frecord
         return ancestor_serialize

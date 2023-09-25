@@ -3,6 +3,8 @@
 DB_STATUS_DELETED: int = 0
 DB_STATUS_ACTIVE: int = 1
 
+DB_NAME_SIZE: int = 64
+
 INDEX_PAGE_URL: str = "/index"
 INDEX_PAGE = "index.html"
 
