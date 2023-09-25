@@ -42,15 +42,24 @@ def main_query():
     result = query.all()
     for item in result:
 
+        tags = ""
+        tag_query = db_manager.session.query(wamod.CTagLink)
+        tag_query = tag_query.filter(wamod.CTagLink.frecord==item.id)
+        tag_query = tag_query.outerjoin(wamod.CTag, wamod.CTagLink.ftag==wamod.CTag.id )
+        for tag in tag_query.all():
+
+            tags += tag.ftagobj.fname + " "
+            # print(tag.ftagobj.fname)
         if item.fweblink is not None:
 
-            print(item.fweblinkobj)
+            print(f"*** {item.fweblinkobj.fname} [{tags}] ****")
+
         if item.fdocument is not None:
 
-            print(item.fdocumentobj)
+            print(f"*** {item.fdocumentobj.fdescription}  [{tags}] ***")
         if item.fnote is not None:
 
-            print(item.fnoteobj)
+            print(f"*** {item.fnoteobj.fname} [{tags}] ***")
     # print(query.one().fdocumentobj)
 
         # print()
