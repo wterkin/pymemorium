@@ -33,11 +33,13 @@ GRID_COLUMNS = [["ID", "id", 1, False, 0],
 ALIGNS = ("align_left", "align_center", "align_right")
 
 
-
 def main_query():
     """Возвращает выборку данных в соответствии с установками."""
     query = db_manager.session.query(wamod.CStorage)
-    print(query.one())
+    # query = query.outerjoin(wamod.CTagLink, wamod.CTagLink.frecord == wamod.CStorage.id)
+    # query = query.join(wamod.CTag, wamod.CTagLink.ftag == wamod.CTag.id)
+    # , wamod.CTagLink, wamod.CTag
+    print(query.all())
     print(query.one().fdocumentobj)
 
         # print()

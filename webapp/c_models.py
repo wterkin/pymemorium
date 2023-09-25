@@ -205,6 +205,8 @@ class CStorage(CFather):
     fweblinkobj = relationship("CWebLink", foreign_keys=[fweblink])
     fdocument = Column(Integer(), ForeignKey('tbl_documents.id'), nullable=True)
     fdocumentobj = relationship("CDocument", foreign_keys=[fdocument])
+    # ftaglinkobj = relationship("CTagLink", foreign_keys=[ ftag])/
+    # ftaglinksobj = relationship("СTagLink", backref="storage")
 
     def __init__(self, pname, ptype, pnote, pweblink, pdocument):
         """Конструктор."""
@@ -235,6 +237,7 @@ class CTagLink(CAncestor):
     __tablename__ = 'tbl_taglinks'
     ftag = Column(Integer(), ForeignKey('tbl_tags.id'), nullable=False)
     frecord = Column(Integer(), ForeignKey('tbl_storage.id'), nullable=False)
+    ftagobj = relationship("CTag", foreign_keys=[ftag])
 
     def __init__(self, ptag, precord):
         """Конструктор."""
