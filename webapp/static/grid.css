@@ -1,0 +1,23 @@
+.grid_style {
+    width: 100%;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+    border-collapse: collapse;
+}
+#note_even { color: #8BAAFD; background-color: #024AF7; }
+#note_odd {  color: #8BAAFD; background-color: #0441BD; }
+#weblink_even { color: #72DBDE; background-color: #024AF7; }
+#weblink_odd { color: #72DBDE; background-color: #0441BD; }
+#document_even { color: #EEF2A5; background-color: #024AF7; }
+#document_odd { color: #EEF2A5; background-color: #0441BD; }
+/*
+ border-top: 1px solid black;
+#unaccessible_line {border-top: 1px solid black; color: #505050; background-color: #FFE9B5; }
+#empty_line {border-top: 1px solid black; background-color: #FFD1D1}
+#no_align { border-left: 1px solid black; }
+#grid_align_left { text-align: left; border-left: 1px solid black; }
+#grid_align_right { text-align: right; border-left: 1px solid black; }
+#grid_header { border-left: 1px solid black; color : #E8E0E0; background-color: #888080;}
+*/

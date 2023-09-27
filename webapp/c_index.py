@@ -8,10 +8,10 @@ from flask import session
 # from flask import url_for
 
 from webapp import application
+from webapp import c_config as wacfg
 from webapp import c_constants as waconst
-from webapp import db_manager
 from webapp import c_models as wamod
-# from webapp import c_config as wacfg
+from webapp import db_manager
 
 GRID_COLUMNS = [["ID", "id", 1, False, 0],
                 ["", "", 0, True, 7],
@@ -35,6 +35,7 @@ ALIGNS = ("align_left", "align_center", "align_right")
 
 def main_query():
     """Возвращает выборку данных в соответствии с установками."""
+    data_list: list = []
     query = db_manager.session.query(wamod.CStorage)
     # query = query.outerjoin(wamod.CTagLink, wamod.CTagLink.frecord == wamod.CStorage.id)
     # query = query.join(wamod.CTag, wamod.CTagLink.ftag == wamod.CTag.id)
@@ -42,24 +43,24 @@ def main_query():
     result = query.all()
     for item in result:
 
-        tags = ""
+        tags: list = []
         tag_query = db_manager.session.query(wamod.CTagLink)
         tag_query = tag_query.filter(wamod.CTagLink.frecord==item.id)
         tag_query = tag_query.outerjoin(wamod.CTag, wamod.CTagLink.ftag==wamod.CTag.id )
         for tag in tag_query.all():
 
-            tags += tag.ftagobj.fname + " "
-            # print(tag.ftagobj.fname)
+            tags.append(tag.ftagobj.fname)
+        tagline: str = ", ".join(tags)
         if item.fweblink is not None:
 
-            print(f"*** {item.fweblinkobj.fname} [{tags}] ****")
+            print(f"*** {item.fweblinkobj.fname} [{tagline}] ****")
 
         if item.fdocument is not None:
 
-            print(f"*** {item.fdocumentobj.fdescription}  [{tags}] ***")
+            print(f"*** {item.fdocumentobj.fdescription}  [{tagline}] ***")
         if item.fnote is not None:
 
-            print(f"*** {item.fnoteobj.fname} [{tags}] ***")
+            print(f"*** {item.fnoteobj.fname} [{tagline}] ***")
     # print(query.one().fdocumentobj)
 
         # print()
@@ -69,6 +70,7 @@ def index_get():
     """Обработчик запросов GET."""
     print("* IDX:GET *")
     session[waconst.SESSION_IDX_FILTER_STATE] = False
+    session[waconst.SESSION_APPLICATION_NAME] = wacfg.Config.APPLICATION_NAME
     main_query()
     # print(session[waconst.SESSION_IDX_FILTER_STATE])
     return render_template(waconst.INDEX_PAGE)

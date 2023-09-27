@@ -1,0 +1,173 @@
+<tr>
+  {% macro colorize_by_parity(index, even_style, odd_style)%}
+    {% if index % 2 == 0 %}
+      {% set style = even_style %}
+    {% else %}
+      {% set style = odd_style %}
+    {% endif %}
+    <tr id="{{style}}">
+  {% endmacro %}
+
+  {% macro colorize_row(pobject, index) %}
+    <!-- Это менеджер или рут? -->
+    {% if session["user_group"] == 1 or session["user_group"] == 2 %}
+      <!-- Точно. Данные имеются? -->
+      {% if pobject[0] != None %}
+        <!-- Точно. Данные доступны?-->
+        {% if pobject[15] == 2 %}
+          <!-- Точно. Раскрашиваем доступными -->
+          {{ colorize_by_parity(index, "avail_line_even", "avail_line_odd") }}
+          {% include "enabled_edit_button.html" %}
+          {% include "enabled_delete_button.html" %}
+          {% include "enabled_send_button.html" %}
+        {% else %}
+          <!-- Нет, раскрашиваем недоступными -->
+          {{ colorize_by_parity(index, "unavail_line_even", "unavail_line_odd") }}
+          {% include "disabled_edit_button.html" %}
+          {% include "disabled_delete_button.html" %}
+          {% include "disabled_send_button.html" %}
+        {% endif %}
+      {% else %}
+        <!-- Нет, данные не введены. Раскрашиваем пустыми -->
+        {{ colorize_by_parity(index, "empty_line_even", "empty_line_odd") }}
+        {% include "disabled_edit_button.html" %}
+        {% include "disabled_delete_button.html" %}
+        {% include "disabled_send_button.html" %}
+      {% endif %}
+    {% else %}
+      <!-- Нет. Это пользователь. Данные доступны?-->
+      {% if pobject[15] == 1 %}
+        <!-- Точно. Раскрашиваем доступными -->
+        {{ colorize_by_parity(index, "avail_line_even", "avail_line_odd") }}
+        {% include "enabled_edit_button.html" %}
+        {% include "enabled_delete_button.html" %}
+        {% include "enabled_send_button.html" %}
+        <!-- Нет, раскрашиваем недоступными -->
+      {% else %}
+        {{ colorize_by_parity(index, "unavail_line_even", "unavail_line_odd") }}
+        {% include "disabled_edit_button.html" %}
+        {% include "disabled_delete_button.html" %}
+        {% include "disabled_send_button.html" %}
+      {% endif %}
+    {% endif %}
+  {% endmacro %}
+
+  {% macro write_field(paligns, pcolumns, pindex, pfield) %}
+    <!-- fstatus не выводим. -->
+    {% if pindex > 1 and pindex < 16 %}
+      <td id="{{ paligns[pcolumns[pindex-1][2]] }}">
+      <!-- Если это поле "Иные причины-1" или "Иные причины-2" - обработаем отдельно -->
+      {% if pindex == 12 or pindex == 14 %}
+        <!-- Если в них не "0" и не "нет" и не None - выводим -->
+        {% if (pfield != "0") and (pfield != "нет") and (pfield != None) %}
+          <!-- Выводим данные -->
+          {{ pfield }}
+        {% endif %}
+      </td>
+      {% else %}
+        {% if session["user_id"] == 3 and pindex == 2 %}
+            {{ param_toolbar_quartals_tuple[pfield-1] }}
+        {% else %}
+          <!-- Если поле равно None - выводим нули -->
+          {% if pfield == None %}
+            0
+          {% else %}
+            <!-- Выводим данные -->
+            {{ pfield }}
+          {% endif %}
+          </td>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endmacro %}
+
+  {% macro write_row(paligns, pcolumns, prow) %}
+    {% for field in prow %}
+      {{ write_field(paligns, pcolumns, loop.index, field)}}
+    {% endfor %}
+  {% endmacro %}
+
+  {% macro place_buttons(avai) %}
+    <!-- Пользователь? -->
+    {% if session["user_group"] == 3 %}
+    <!-- Точно. -->
+    {% else %}
+    <!-- Нет, манагер или рут -->
+    {% endif %}
+  {% endmacro %}
+  <td>
+    <!-- param_columns -->
+    <table class="grid">
+      <colgroup>
+        <col width="1%">
+        <col width="1%">
+        <col width="1%">
+        {% for column in param_columns %}
+          {% if column[3] == True %}
+            <col width="{{ column[4] }}%">
+          {% endif %}
+        {% endfor %}
+      </colgroup>
+      <tbody>
+        <!-- Заголовки столбцов ▾-->
+        <tr>
+          <!-- столбцы для кнопок -->
+          <td id="frame3d"></td>
+          <td id="frame3d"></td>
+          <td id="frame3d"></td>
+          {% for column_title, column_field, column_align, column_visible, column_width in param_columns %}
+            {% if column_visible == True %}
+              <!-- Если это столбец района/квартала -->
+              {% if loop.index == 2 %}
+              <!-- и зашёл пользователь -->
+                {% if session["user_group"] == 3 %}
+                  <td id="frame3d"> Квартал </td>
+                {% else %}
+                  <td id="frame3d"> Район </td>
+                {% endif%}
+              {% else %}
+                <td id="frame3d"> {{ column_title }} </td>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </tr>
+        <!-- Данные -->
+          <!-- Получим очередную строку данных -->
+          {% for data_object in param_data %}
+            <form method="post" role="form">
+              <!-- Тут сложные условия раскраски -->
+              {% if param_delete_record_id_id == data_object[0] %}
+                <tr id="selected_line_top">
+                  <td colspan="17">
+                    {% if session["idx.trash_state"] == True %}
+                      Вы действительно хотите восстановить эту запись?
+                    {% else %}
+                      Вы действительно хотите удалить эту запись?
+                    {% endif %}
+                    <button name="yes" value="yes">
+                      <img src="static\gtk-yes.png"> Да
+                    </button>
+                    <button name="no" value="no">
+                      <img src="static\stop.png"> Нет
+                    </button>
+                  </td>
+                </tr>
+                <tr id="selected_line_bottom">
+                  {% include "disabled_edit_button.html" %}
+                  {% include "disabled_delete_button.html" %}
+                {% include "disabled_send_button.html" %}
+              {% else %}
+                {{ colorize_row(data_object, loop.index) }}
+              {% endif %}
+              <!-- hidden id -->
+              <input name="hidden_id"
+                     type="hidden"
+                     value="{{ data_object[0] }}">
+              {{ write_row(param_aligns, param_columns, data_object) }}
+            </tr>
+          </form>
+        {% endfor %}
+      </tbody>
+    </table>
+  </td>
+</tr>

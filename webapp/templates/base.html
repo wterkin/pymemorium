@@ -5,13 +5,14 @@
         <link href="{{ url_for('static', filename='main.css')}}" rel="stylesheet" type="text/css">
         <link href="{{ url_for('static', filename='input_lines.css')}}" rel="stylesheet" type="text/css">
         <link href="{{ url_for('static', filename='buttons.css')}}" rel="stylesheet" type="text/css">
+        <link href="{{ url_for('static', filename='grid.css')}}" rel="stylesheet" type="text/css">
         <!-- <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">-->
     </head>
     <body bgcolor="black">
         <table class="page_markup_style">
             <tbody>
                 <tr>
-                    <td id="inner-dark-shadow"> {{ session["APPLICATION_NAME"] }} </td>
+                    <td id="inner-dark-shadow"> {{ session['appname'] }} </td>
                     <!--<td id="impressed_banner"> {{ session["APPLICATION_NAME"] }} </td>-->
                 </tr>
                 <tr>
