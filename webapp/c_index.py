@@ -51,14 +51,14 @@ def main_query():
 
             tags.append(tag.ftagobj.fname)
         tagline: str = ", ".join(tags)
-        if item.fweblink is not None:
+        if item.ftype == waconst.DB_WEBLINK_TYPE:
 
             print(f"*** {item.fweblinkobj.fname} [{tagline}] ****")
 
-        if item.fdocument is not None:
+        if item.ftype == waconst.DB_DOCUMENT_TYPE:
 
             print(f"*** {item.fdocumentobj.fdescription}  [{tagline}] ***")
-        if item.fnote is not None:
+        if item.ftype == waconst.DB_NOTE_TYPE:
 
             print(f"*** {item.fnoteobj.fname} [{tagline}] ***")
     # print(query.one().fdocumentobj)

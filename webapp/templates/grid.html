@@ -1,5 +1,5 @@
 <tr>
-  {% macro colorize_by_parity(index, even_style, odd_style)%}
+  {% macro colorize_by_parity(index, even_style, odd_style) %}
     {% if index % 2 == 0 %}
       {% set style = even_style %}
     {% else %}
@@ -9,47 +9,21 @@
   {% endmacro %}
 
   {% macro colorize_row(pobject, index) %}
-    <!-- Это менеджер или рут? -->
-    {% if session["user_group"] == 1 or session["user_group"] == 2 %}
-      <!-- Точно. Данные имеются? -->
-      {% if pobject[0] != None %}
-        <!-- Точно. Данные доступны?-->
-        {% if pobject[15] == 2 %}
-          <!-- Точно. Раскрашиваем доступными -->
-          {{ colorize_by_parity(index, "avail_line_even", "avail_line_odd") }}
-          {% include "enabled_edit_button.html" %}
-          {% include "enabled_delete_button.html" %}
-          {% include "enabled_send_button.html" %}
-        {% else %}
-          <!-- Нет, раскрашиваем недоступными -->
-          {{ colorize_by_parity(index, "unavail_line_even", "unavail_line_odd") }}
-          {% include "disabled_edit_button.html" %}
-          {% include "disabled_delete_button.html" %}
-          {% include "disabled_send_button.html" %}
-        {% endif %}
-      {% else %}
-        <!-- Нет, данные не введены. Раскрашиваем пустыми -->
-        {{ colorize_by_parity(index, "empty_line_even", "empty_line_odd") }}
-        {% include "disabled_edit_button.html" %}
-        {% include "disabled_delete_button.html" %}
-        {% include "disabled_send_button.html" %}
-      {% endif %}
-    {% else %}
-      <!-- Нет. Это пользователь. Данные доступны?-->
-      {% if pobject[15] == 1 %}
-        <!-- Точно. Раскрашиваем доступными -->
-        {{ colorize_by_parity(index, "avail_line_even", "avail_line_odd") }}
-        {% include "enabled_edit_button.html" %}
-        {% include "enabled_delete_button.html" %}
-        {% include "enabled_send_button.html" %}
-        <!-- Нет, раскрашиваем недоступными -->
-      {% else %}
-        {{ colorize_by_parity(index, "unavail_line_even", "unavail_line_odd") }}
-        {% include "disabled_edit_button.html" %}
-        {% include "disabled_delete_button.html" %}
-        {% include "disabled_send_button.html" %}
-      {% endif %}
+    {# Тип записи #}
+    {% if pobject[0] == 1 %}
+      {# Заметка #}
+      {{ colorize_by_parity(index, "note_even", "note_odd") }}
     {% endif %}
+    {% if pobject[0] == 2 %}
+      {# Документ #}
+      {{ colorize_by_parity(index, "document_even", "document_odd") }}
+    {% endif %}
+    {% if pobject[0] == 3 %}
+      {# Ссылка #}
+      {{ colorize_by_parity(index, "weblink_even", "weblink_odd") }}
+    {% endif %}
+    {% include "enabled_edit_button.html" %}
+    {% include "enabled_delete_button.html" %}
   {% endmacro %}
 
   {% macro write_field(paligns, pcolumns, pindex, pfield) %}

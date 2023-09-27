@@ -28,7 +28,7 @@ target_metadata = db_manager.get_metadata()
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
+#migrate = Migrate(app, db, render_as_batch=True)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -48,6 +48,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+	render_as_batch=True
     )
 
     with context.begin_transaction():

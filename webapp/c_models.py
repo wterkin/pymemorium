@@ -83,6 +83,30 @@ class CTag(CAncestor):
         return ancestor_serialize
 
 
+class CType(CAncestor):
+    """Класс модели таблицы справочника типов единиц хранения."""
+    __tablename__ = 'tbl_types'
+    fname = Column(String(waconst.DB_NAME_SIZE), nullable=False)
+
+    def __init__(self, pname):
+        """Конструктор."""
+        super().__init__()
+        self.fname = pname
+
+    def __repr__(self):
+        ancestor_repr = super().__repr__()
+        return f"""* CType * 
+                   {ancestor_repr},
+                   Name: {self.fname}"""
+
+    @property
+    def serialize(self):
+        ancestor_serialize = super().serialize
+        ancestor_serialize["name"] = self.fname
+        return ancestor_serialize
+
+
+
 class CNote(CAncestor):
     """Класс модели таблицы хранения заметок."""
     __tablename__ = 'tbl_notes'
@@ -200,6 +224,7 @@ class CStorage(CAncestor):
     """Класс модели таблицы хранилища."""
 
     __tablename__ = 'tbl_storage'
+    ftype = Column(Integer(), ForeignKey('tbl_types.id'))
     fnote = Column(Integer(), ForeignKey('tbl_notes.id'), nullable=True)
     fnoteobj = relationship("CNote", foreign_keys=[fnote])
     fweblink = Column(Integer(), ForeignKey('tbl_weblinks.id'), nullable=True)
@@ -218,6 +243,7 @@ class CStorage(CAncestor):
     def __repr__(self):
         ancestor_repr = super().__repr__()
         return f"""{ancestor_repr},
+                   Type: {self.ftype},
                    Note:{self.fnote},
                    Weblink:{self.fweblink},
                    Document:{self.fdocument}"""
@@ -225,6 +251,7 @@ class CStorage(CAncestor):
     @property
     def serialize(self):
         ancestor_serialize = super().serialize
+        ancestor_serialize["ftype"] = self.ftype
         ancestor_serialize["fnote"] = self.fnote
         ancestor_serialize["fweblink"] = self.fweblink
         ancestor_serialize["fdocument"] = self.fdocument
