@@ -43,10 +43,12 @@ def main_query():
     result = query.all()
     for item in result:
 
+        print(item)
         tags: list = []
         tag_query = db_manager.session.query(wamod.CTagLink)
         tag_query = tag_query.filter(wamod.CTagLink.frecord==item.id)
         tag_query = tag_query.outerjoin(wamod.CTag, wamod.CTagLink.ftag==wamod.CTag.id )
+
         for tag in tag_query.all():
 
             tags.append(tag.ftagobj.fname)
@@ -61,9 +63,15 @@ def main_query():
         if item.ftype == waconst.DB_NOTE_TYPE:
 
             print(f"*** {item.fnoteobj.fname} [{tagline}] ***")
-    # print(query.one().fdocumentobj)
+    return result
 
-        # print()
+
+def update_content():
+    """Обновляет выборку данных с новыми параметрами."""
+    data_list: list = main_query()
+    return render_template(waconst.INDEX_PAGE,
+                           param_data = data_list
+                           )
 
 
 def index_get():
@@ -71,15 +79,13 @@ def index_get():
     print("* IDX:GET *")
     session[waconst.SESSION_IDX_FILTER_STATE] = False
     session[waconst.SESSION_APPLICATION_NAME] = wacfg.Config.APPLICATION_NAME
-    main_query()
-    # print(session[waconst.SESSION_IDX_FILTER_STATE])
-    return render_template(waconst.INDEX_PAGE)
+    return update_content()
 
 
 def index_post():
     """Обработчик запросов POST."""
     print("* IDX:POST *")
-    return render_template(waconst.INDEX_PAGE)
+    return update_content()
 
 
 @application.route(waconst.INDEX_PAGE_URL, methods=["GET", "POST"])

@@ -26,109 +26,53 @@
     {% include "enabled_delete_button.html" %}
   {% endmacro %}
 
-  {% macro write_field(paligns, pcolumns, pindex, pfield) %}
-    <!-- fstatus не выводим. -->
-    {% if pindex > 1 and pindex < 16 %}
-      <td id="{{ paligns[pcolumns[pindex-1][2]] }}">
-      <!-- Если это поле "Иные причины-1" или "Иные причины-2" - обработаем отдельно -->
-      {% if pindex == 12 or pindex == 14 %}
-        <!-- Если в них не "0" и не "нет" и не None - выводим -->
-        {% if (pfield != "0") and (pfield != "нет") and (pfield != None) %}
-          <!-- Выводим данные -->
-          {{ pfield }}
-        {% endif %}
-      </td>
-      {% else %}
-        {% if session["user_id"] == 3 and pindex == 2 %}
-            {{ param_toolbar_quartals_tuple[pfield-1] }}
-        {% else %}
-          <!-- Если поле равно None - выводим нули -->
-          {% if pfield == None %}
-            0
-          {% else %}
-            <!-- Выводим данные -->
-            {{ pfield }}
-          {% endif %}
-          </td>
-        {% endif %}
-      {% endif %}
-    {% endif %}
-  {% endmacro %}
 
-  {% macro write_row(paligns, pcolumns, prow) %}
-    {% for field in prow %}
-      {{ write_field(paligns, pcolumns, loop.index, field)}}
-    {% endfor %}
-  {% endmacro %}
-
-  {% macro place_buttons(avai) %}
-    <!-- Пользователь? -->
-    {% if session["user_group"] == 3 %}
-    <!-- Точно. -->
-    {% else %}
-    <!-- Нет, манагер или рут -->
-    {% endif %}
-  {% endmacro %}
+  {# *** Вот тут начинается грид *** #}
   <td>
     <!-- param_columns -->
-    <table class="grid">
+    <table class="grid_style">
       <colgroup>
-        <col width="1%">
-        <col width="1%">
-        <col width="1%">
-        {% for column in param_columns %}
-          {% if column[3] == True %}
-            <col width="{{ column[4] }}%">
-          {% endif %}
-        {% endfor %}
+        <col width="1%"> {# id #}
+        <col width="1%"> {# Кнопка "Редактировать" #}
+        <col width="1%"> {# Кнопка "Удалить" #}
+        <col width="3%"> {# Тип #}
+        <col width="47%"> {# Наименование #}
+        <col width="47%"> {# Тэги #}
       </colgroup>
       <tbody>
-        <!-- Заголовки столбцов ▾-->
+        <!-- Заголовки столбцов !!!! ▾-->
         <tr>
-          <!-- столбцы для кнопок -->
-          <td id="frame3d"></td>
-          <td id="frame3d"></td>
-          <td id="frame3d"></td>
-          {% for column_title, column_field, column_align, column_visible, column_width in param_columns %}
-            {% if column_visible == True %}
-              <!-- Если это столбец района/квартала -->
-              {% if loop.index == 2 %}
-              <!-- и зашёл пользователь -->
-                {% if session["user_group"] == 3 %}
-                  <td id="frame3d"> Квартал </td>
-                {% else %}
-                  <td id="frame3d"> Район </td>
-                {% endif%}
-              {% else %}
-                <td id="frame3d"> {{ column_title }} </td>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>Наименование</td>
+          <td>Теги<td>
         </tr>
-        <!-- Данные -->
-          <!-- Получим очередную строку данных -->
-          {% for data_object in param_data %}
-            <form method="post" role="form">
-              <!-- Тут сложные условия раскраски -->
-              {% if param_delete_record_id_id == data_object[0] %}
-                <tr id="selected_line_top">
-                  <td colspan="17">
-                    {% if session["idx.trash_state"] == True %}
-                      Вы действительно хотите восстановить эту запись?
-                    {% else %}
-                      Вы действительно хотите удалить эту запись?
-                    {% endif %}
-                    <button name="yes" value="yes">
-                      <img src="static\gtk-yes.png"> Да
-                    </button>
-                    <button name="no" value="no">
-                      <img src="static\stop.png"> Нет
-                    </button>
-                  </td>
-                </tr>
-                <tr id="selected_line_bottom">
-                  {% include "disabled_edit_button.html" %}
-                  {% include "disabled_delete_button.html" %}
+        {# Получим очередную строку данных #}
+        {% for record in param_data %}
+          <form method="post" role="form">
+            {# Тут сложные условия раскраски #}
+            {#
+            {% if param_delete_record_id == record[0] %}
+              <tr id="selected_line_top">
+                <td colspan="6">
+                  {% if session["idx_trash_state"] == True %}
+                    Вы действительно хотите восстановить эту запись?
+                  {% else %}
+                    Вы действительно хотите удалить эту запись?
+                  {% endif %}
+                  <button name="yes" value="yes">
+                    <img src="static\gtk-yes.png"> Да
+                  </button>
+                  <button name="no" value="no">
+                    <img src="static\stop.png"> Нет
+                  </button>
+                </td>
+              </tr>
+              <tr id="selected_line_bottom">
+                {% include "disabled_edit_button.html" %}
+                {% include "disabled_delete_button.html" %}
                 {% include "disabled_send_button.html" %}
               {% else %}
                 {{ colorize_row(data_object, loop.index) }}
@@ -137,8 +81,38 @@
               <input name="hidden_id"
                      type="hidden"
                      value="{{ data_object[0] }}">
-              {{ write_row(param_aligns, param_columns, data_object) }}
             </tr>
+            #}
+
+          <tr>
+            {# ID #}
+            <td id="grid_align_left">
+              <input name="hidden_id"
+                     type="hidden"
+                     value="{{ record.id }}">
+            </td>
+            {% include "edit_button.html" %}
+            {% include "delete_button.html" %}
+            <td>
+              {% if record.ftype == 1 %}
+                <img src="static/internet-news-reader.png">
+              {% elif record.ftype == 2 %}
+                <img src="static/x-office-document.png">
+              {% elif record.ftype == 3 %}
+                <img src="static/applications-internet.png">
+              {% endif %}
+            </td>
+            <td>
+              {% if record.ftype == 1 %}
+                {{ record.fnoteobj.fname }}
+              {% elif record.ftype == 2 %}
+                {{ record.fdocumentobj.fdescription }}
+              {% elif record.ftype == 3 %}
+                {{ record.fweblinkobj.fname }}
+              {% endif %}
+            </td>
+            <td></td>
+          </tr>
           </form>
         {% endfor %}
       </tbody>

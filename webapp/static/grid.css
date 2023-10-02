@@ -12,12 +12,23 @@
 #weblink_odd { color: #72DBDE; background-color: #0441BD; }
 #document_even { color: #EEF2A5; background-color: #024AF7; }
 #document_odd { color: #EEF2A5; background-color: #0441BD; }
+#frame3d { border-style: groove; border-width: 2px; }
+#grid_align_left { text-align: left; border-left: 1px solid black; }
+#grid_align_right { text-align: right; border-left: 1px solid black; }
+#selected_line_top { background-color: Crimson;
+                     border:  1px solid Black;
+                     border-collapse: collapse;
+                     color: LightYellow;
+                    }
+#selected_line_bottom { background-color: Crimson;
+                        font-weight: bold;
+                        color: LightYellow;
+                      }
+
 /*
  border-top: 1px solid black;
 #unaccessible_line {border-top: 1px solid black; color: #505050; background-color: #FFE9B5; }
 #empty_line {border-top: 1px solid black; background-color: #FFD1D1}
 #no_align { border-left: 1px solid black; }
-#grid_align_left { text-align: left; border-left: 1px solid black; }
-#grid_align_right { text-align: right; border-left: 1px solid black; }
 #grid_header { border-left: 1px solid black; color : #E8E0E0; background-color: #888080;}
 */
