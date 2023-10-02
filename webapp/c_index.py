@@ -41,18 +41,21 @@ def main_query():
     # query = query.join(wamod.CTag, wamod.CTagLink.ftag == wamod.CTag.id)
     # , wamod.CTagLink, wamod.CTag
     result = query.all()
+    tags_list: list = []
     for item in result:
 
-        print(item)
         tags: list = []
+        tagline: str = " "
         tag_query = db_manager.session.query(wamod.CTagLink)
         tag_query = tag_query.filter(wamod.CTagLink.frecord==item.id)
         tag_query = tag_query.outerjoin(wamod.CTag, wamod.CTagLink.ftag==wamod.CTag.id )
-
         for tag in tag_query.all():
 
             tags.append(tag.ftagobj.fname)
-        tagline: str = ", ".join(tags)
+        if len(tags) > 0:
+
+            tagline = ", ".join(tags)
+        tags_list.append(tagline)
         if item.ftype == waconst.DB_WEBLINK_TYPE:
 
             print(f"*** {item.fweblinkobj.fname} [{tagline}] ****")
@@ -63,14 +66,15 @@ def main_query():
         if item.ftype == waconst.DB_NOTE_TYPE:
 
             print(f"*** {item.fnoteobj.fname} [{tagline}] ***")
-    return result
+    return result, tags_list
 
 
 def update_content():
     """Обновляет выборку данных с новыми параметрами."""
-    data_list: list = main_query()
+    data_list, tags_list = main_query()
     return render_template(waconst.INDEX_PAGE,
-                           param_data = data_list
+                           param_data=data_list,
+                           param_tags=tags_list
                            )
 
 

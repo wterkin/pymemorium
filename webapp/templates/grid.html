@@ -111,7 +111,7 @@
                 {{ record.fweblinkobj.fname }}
               {% endif %}
             </td>
-            <td></td>
+            <td>{{ param_tags[loop.index-1] }}</td>
           </tr>
           </form>
         {% endfor %}
