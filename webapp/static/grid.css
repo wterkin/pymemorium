@@ -5,13 +5,20 @@
     border-right: 1px solid black;
     border-top: 1px solid black;
     border-collapse: collapse;
+    font-family: "Verdana";
+    font-size: 13pt;
+    font-stretch: Normal; /* ultra-condensed, extra-condensed, condensed, semi-condensed,
+      semi-expanded, expanded, extra-expanded, ultra-expanded, inherit */
+    font-style: Normal; /*italic, oblique, inherit */
+    font-variant: Normal; /* small-caps, inherit */
+    font-weight: Normal; /* bold, bolder, lighter */
 }
-#note_even { color: #8BAAFD; background-color: #024AF7; }
-#note_odd {  color: #8BAAFD; background-color: #0441BD; }
-#weblink_even { color: #72DBDE; background-color: #024AF7; }
-#weblink_odd { color: #72DBDE; background-color: #0441BD; }
-#document_even { color: #EEF2A5; background-color: #024AF7; }
-#document_odd { color: #EEF2A5; background-color: #0441BD; }
+#note_even { color: #1F51B1; background-color: #A6A0A0; }
+#note_odd {  color: #1F51B1; background-color: #B5AFAF; }
+#weblink_even { color: #5C7000; background-color: #A6A0A0; }
+#weblink_odd { color: #5C7000; background-color: #B5AFAF; }
+#document_even { color: #EEF2A5; background-color: #A6A0A0; }
+#document_odd { color: #EEF2A5; background-color: #B5AFAF; }
 #frame3d { border-style: groove; border-width: 2px; }
 #grid_align_left { text-align: left; border-left: 1px solid black; }
 #grid_align_right { text-align: right; border-left: 1px solid black; }

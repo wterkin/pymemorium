@@ -8,22 +8,22 @@
     <tr id="{{style}}">
   {% endmacro %}
 
-  {% macro colorize_row(pobject, index) %}
+  {% macro colorize_row(precord, index) %}
     {# Тип записи #}
-    {% if pobject[0] == 1 %}
+    {% if precord.ftype == 1 %}
       {# Заметка #}
       {{ colorize_by_parity(index, "note_even", "note_odd") }}
     {% endif %}
-    {% if pobject[0] == 2 %}
+    {% if precord.ftype == 2 %}
       {# Документ #}
       {{ colorize_by_parity(index, "document_even", "document_odd") }}
     {% endif %}
-    {% if pobject[0] == 3 %}
+    {% if precord.ftype == 3 %}
       {# Ссылка #}
       {{ colorize_by_parity(index, "weblink_even", "weblink_odd") }}
     {% endif %}
-    {% include "enabled_edit_button.html" %}
-    {% include "enabled_delete_button.html" %}
+    {% include "edit_button.html" %}
+    {% include "delete_button.html" %}
   {% endmacro %}
 
 
@@ -52,47 +52,13 @@
         {# Получим очередную строку данных #}
         {% for record in param_data %}
           <form method="post" role="form">
-            {# Тут сложные условия раскраски #}
-            {#
-            {% if param_delete_record_id == record[0] %}
-              <tr id="selected_line_top">
-                <td colspan="6">
-                  {% if session["idx_trash_state"] == True %}
-                    Вы действительно хотите восстановить эту запись?
-                  {% else %}
-                    Вы действительно хотите удалить эту запись?
-                  {% endif %}
-                  <button name="yes" value="yes">
-                    <img src="static\gtk-yes.png"> Да
-                  </button>
-                  <button name="no" value="no">
-                    <img src="static\stop.png"> Нет
-                  </button>
-                </td>
-              </tr>
-              <tr id="selected_line_bottom">
-                {% include "disabled_edit_button.html" %}
-                {% include "disabled_delete_button.html" %}
-                {% include "disabled_send_button.html" %}
-              {% else %}
-                {{ colorize_row(data_object, loop.index) }}
-              {% endif %}
-              <!-- hidden id -->
-              <input name="hidden_id"
-                     type="hidden"
-                     value="{{ data_object[0] }}">
-            </tr>
-            #}
-
-          <tr>
+          {{colorize_row(record, loop.index)}}
             {# ID #}
             <td id="grid_align_left">
               <input name="hidden_id"
                      type="hidden"
                      value="{{ record.id }}">
             </td>
-            {% include "edit_button.html" %}
-            {% include "delete_button.html" %}
             <td>
               {% if record.ftype == 1 %}
                 <img src="static/internet-news-reader.png">
