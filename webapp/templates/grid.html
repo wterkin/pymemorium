@@ -41,7 +41,7 @@
       </colgroup>
       <tbody>
         <!-- Заголовки столбцов !!!! ▾-->
-        <tr>
+        <tr id="grid_header">
           <td></td>
           <td></td>
           <td></td>
@@ -68,7 +68,7 @@
                 <img src="static/applications-internet.png">
               {% endif %}
             </td>
-            <td>
+            <td id="grid_align_left">
               {% if record.ftype == 1 %}
                 {{ record.fnoteobj.fname }}
               {% elif record.ftype == 2 %}
