@@ -74,7 +74,8 @@ def update_content():
     data_list, tags_list = main_query()
     return render_template(waconst.INDEX_PAGE,
                            param_data=data_list,
-                           param_tags=tags_list
+                           param_tags=tags_list,
+                           param_delete_record_id=2
                            )
 
 

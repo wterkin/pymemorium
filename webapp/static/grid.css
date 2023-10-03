@@ -63,7 +63,11 @@
                border-top: 2px solid #E6E4E4;
                border-bottom: 2px solid #706565;
              }
-
+/*
+#text_rounded { border-radius: 10px;
+                background-color: #A0A0A0;
+              }
+*/
 
 /*
  border-top: 1px solid black;
