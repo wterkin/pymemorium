@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
                 <tr>
-                {% include "grid.html" %}
+                  <td id="halleft"> {% include "idx_toolbar.html" %} </td>
+                </tr>
+                <tr>
+                  {% include "idx_grid.html" %}
                 </tr>
 {% endblock %}

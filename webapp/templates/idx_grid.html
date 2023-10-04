@@ -50,10 +50,12 @@
           <td>Наименование</td>
           <td>Теги<td>
         </tr>
+
         {# *** Цикл по выборке *** #}
         {% for record in param_data %}
 
           <form method="post" role="form">
+
             {# *** Если в форму передали ID удаляемой записи... *** #}
             {% if param_delete_record_id == record.id %}
 
@@ -75,36 +77,46 @@
                 </td>
               </tr>
               <tr id="selected_line_bottom">
+
                 {% include "disabled_edit_button.html" %}
                 {% include "disabled_delete_button.html" %}
             {% else %}
 
               {{colorize_row(record, loop.index)}}
             {% endif %}
+            {# *** Вывод данных *** #}
             <td id="grid_align_left">
+
               <input name="hidden_id"
                      type="hidden"
                      value="{{ record.id }}">
             </td>
             <td>
+
               {% if record.ftype == 1 %}
+
                 <img src="static/internet-news-reader.png">
               {% elif record.ftype == 2 %}
+
                 <img src="static/x-office-document.png">
               {% elif record.ftype == 3 %}
+
                 <img src="static/applications-internet.png">
               {% endif %}
             </td>
             <td id="grid_align_left">
+
               {% if record.ftype == 1 %}
+
                 {{ record.fnoteobj.fname }}
               {% elif record.ftype == 2 %}
+
                 {{ record.fdocumentobj.fdescription }}
               {% elif record.ftype == 3 %}
+
                 {{ record.fweblinkobj.fname }}
               {% endif %}
             </td>
-
             <td>[{{ param_tags[loop.index-1] }}]</td>
           </tr>
           </form>
