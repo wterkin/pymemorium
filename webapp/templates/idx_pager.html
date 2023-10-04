@@ -6,11 +6,11 @@
       <table align="center">
         <tr>
           {# Если это не первый фрейм... #}
-          {% if session["idx.frame.number"] > 0 %}
+          {% if session["idx_frame_number"] > 0 %}
             {# *** ...выводим кнопку перехода на первый фрейм...  *** #}
             <td>
               <button form="pager"
-                      name="idx.pager.first_frame"
+                      name="idx_pager_first_frame"
                       value="first">
                 <<
               </button>
@@ -18,36 +18,36 @@
             {# ***  ...и на один фрейм назад  *** #}
             <td>
               <button form="pager"
-                      name="idx.pager.prev_frame"
+                      name="idx_pager_prev_frame"
                       value="prev">
                 <
               </button>
             </td>
           {% endif %}
           {# ***  Если это не последний фрейм...  *** #}
-          {% if session["idx.frame.number"] + 1 <= pi_frames %}
+          {% if session["idx_frame_number"] + 1 <= param_frames %}
             {# ***  Выводим кнопки страниц фрейма  *** #}
-            {% for page in range(pi_framesize) %}
+            {% for page in range(param_framesize) %}
               <td>
                 <button form="pager"
                         name="page{{ page }}"
-                        value="{{ session['idx.frame.number'] * pi_framesize * pi_pagesize + page * pi_pagesize + 1 }}">
-                  {% if page == session["idx.page.number"] %}
+                        value="{{ session['idx_frame_number'] * param_framesize * param_pagesize + page * param_pagesize + 1 }}">
+                  {% if page == session["idx_page_number"] %}
                     <span id="currentpage">
                   {% else %}
                     <span>
                   {% endif %}
-                    {{ session["idx.frame.number"] * pi_framesize * pi_pagesize + page * pi_pagesize+1 }} -
-                    {{ session["idx.frame.number"] * pi_framesize * pi_pagesize + page * pi_pagesize + pi_pagesize}}
+                    {{ session["idx_frame_number"] * param_framesize * param_pagesize + page * param_pagesize+1 }} -
+                    {{ session["idx_frame_number"] * param_framesize * param_pagesize + page * param_pagesize + param_pagesize}}
                     </span>
                 </button>
               </td>
             {% endfor %}
-            {% if (session["idx.frame.number"]+1 < pi_frames) or (pi_part_frame == True) %}
+            {% if (session["idx_frame_number"]+1 < param_frames) or (param_part_frame == True) %}
               {# ***  ...выводим кнопку перехода на следующий фрейм...  *** #}
               <td>
                 <button form="pager"
-                        name="idx.pager.next_frame"
+                        name="idx_pager_next_frame"
                         value="next">
                   >
                 </button>
@@ -55,7 +55,7 @@
               {# ***  ...и на последний.  *** #}
               <td>
                 <button form="pager"
-                        name="idx.pager.last_frame"
+                        name="idx_pager_last_frame"
                         value="last">
                   >>
                 </button>
@@ -63,37 +63,37 @@
             {% endif %}
           {% else %}
             {# ***  Может, у нас имеется неполный фрейм?  *** #}
-            {% if pi_part_frame == True %}
+            {% if param_part_frame == True %}
               {# ***  Есть, чего б нет?  *** #}
-              {% for page in range(pi_part_frame_size) %}
+              {% for page in range(param_part_frame_size) %}
                 <td>
                   <button form="pager"
                           name="page{{ page }}"
-                          value="{{ session['idx.frame.number'] * pi_framesize * pi_pagesize + page * pi_pagesize + 1 }}">
-                    {% if page == session["idx.page.number"] %}
+                          value="{{ session['idx_frame_number'] * param_framesize * param_pagesize + page * param_pagesize + 1 }}">
+                    {% if page == session["idx_page_number"] %}
                       <span id="currentpage">
                     {% else %}
                       <span>
                     {% endif %}
-                      {{ session["idx.frame.number"] * pi_framesize * pi_pagesize + page * pi_pagesize+1 }} -
-                      {{ session["idx.frame.number"] * pi_framesize * pi_pagesize + page * pi_pagesize + pi_pagesize }}
+                      {{ session["idx_frame_number"] * param_framesize * param_pagesize + page * param_pagesize + 1 }} -
+                      {{ session["idx_frame_number"] * param_framesize * param_pagesize + page * param_pagesize + param_pagesize }}
                       </span>
                   </button>
                 </td>
               {% endfor %}
               {# ***  Частичная кнопка есть?  *** #}
-              {% if pi_part_page == True %}
+              {% if param_part_page == True %}
                 <td>
                   <button form="pager"
-                          name="page{{ pi_part_frame_size }}"
-                          value="{{ session['idx.frame.number'] * pi_framesize * pi_pagesize + pi_part_frame_size * pi_pagesize + 1 }}">
-                   {% if pi_part_framesize == session["idx.page.number"] %}
+                          name="page{{ param_part_frame_size }}"
+                          value="{{ session['idx_frame_number'] * param_framesize * param_pagesize + param_part_frame_size * param_pagesize + 1 }}">
+                   {% if param_part_framesize == session["idx_page_number"] %}
                      <span id="currentpage">
                    {% else %}
                      <span>
                    {% endif %}
-                   {{ session["idx.frame.number"] * pi_framesize * pi_pagesize + pi_part_frame_size * pi_pagesize + 1 }} -
-                   {{ pi_records }}
+                   {{ session["idx_frame_number"] * param_framesize * param_pagesize + param_part_frame_size * param_pagesize + 1 }} -
+                   {{ param_records }}
                   </button>
                 </td>
               {% endif %}

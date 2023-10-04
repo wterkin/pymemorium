@@ -72,11 +72,48 @@ def main_query():
 def update_content():
     """Обновляет выборку данных с новыми параметрами."""
     data_list, tags_list = main_query()
+    # param_frames param_framesize
+    # param_pagesize
+    # param_part_frame param_part_frame_size
+    # param_part_page
+    # param_records
     return render_template(waconst.INDEX_PAGE,
                            param_data=data_list,
                            param_tags=tags_list,
                            param_delete_record_id=2
                            )
+
+
+def pager_recalc(precords):
+    """Процедура производит расчёт параметров пейджера."""
+    assert precords is not None, ("Assert: [c_insert:pager_recalc]: No "
+                                  "<precords> parameter specified!")
+
+    part_frame_records: int = 0
+    part_frame: bool = False
+    part_frame_size: int = 0
+    part_page: bool = False
+    part_page_size: int = 0
+    # *** Найдём к-во полных фреймов
+    frames: int = (precords // (waconst.PAGER_FRAMESIZE * waconst.PAGER_PAGESIZE))
+    full_frames_records: int = (frames * waconst.PAGER_FRAMESIZE * waconst.PAGER_PAGESIZE)
+    # *** Если к-во записей не делится нацело на к-во записей во фрейме
+    if precords % (waconst.PAGER_PAGESIZE * waconst.PAGER_FRAMESIZE) > 0:
+        # *** Добавим неполный фрейм
+        part_frame = True
+        # *** Посчитаем, сколько записей будет в последнем, неполном фрейме
+        part_frame_records = precords - full_frames_records
+        # *** Рассчитаем к-во страниц в последнем фрейме
+        part_frame_size = int(part_frame_records / waconst.PAGER_PAGESIZE)
+    # *** Если к-во зап. в выборке не делится нацело на к-во зап. на странице
+    if precords % waconst.PAGER_PAGESIZE > 0:
+
+        # *** Увеличиваем к-во страниц в неполном фрейме на 1
+        part_page = True
+        # *** Рассчитаем к-во записей на последней странице ???
+        part_page_size = (part_frame_records - part_frame_size * waconst.PAGER_PAGESIZE)
+    return frames, part_frame, part_frame_size, \
+        part_page, part_page_size
 
 
 def index_get():
