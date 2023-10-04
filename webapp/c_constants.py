@@ -8,8 +8,8 @@ DB_WEBLINK_TYPE: int = 3
 
 DB_NAME_SIZE: int = 64
 
-PAGER_FRAMESIZE = 10
-PAGER_PAGESIZE = 25
+PAGER_FRAMESIZE: int = 10
+PAGER_PAGESIZE: int = 25
 
 INDEX_PAGE_URL: str = "/index"
 INDEX_PAGE: str = "index.html"
@@ -26,3 +26,4 @@ INDEX_FORM_FIRST_FRAME_BUTTON: str = "idx_pager_first_frame"
 INDEX_FORM_PREV_FRAME_BUTTON: str = "idx_pager_prev_frame"
 INDEX_FORM_NEXT_FRAME_BUTTON: str = "idx_pager_next_frame"
 INDEX_FORM_LAST_FRAME_BUTTON: str = "idx_pager_last_frame"
+INDEX_TOOLBAR_FILTER_BUTTON: str = "toolbar_filter"

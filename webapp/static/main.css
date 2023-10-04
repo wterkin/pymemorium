@@ -28,6 +28,24 @@
 
 }
 
+.cool_button {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  padding: .4em .8em;
+  outline: none;
+  border-width: 2px 0;
+  border-style: solid none;
+  /*border-color: #FDBE33 #000 #D77206;*/
+  border-color: #707070 #000 #505050;
+  border-radius: 6px;
+  /*background: linear-gradient(#F3AE0F, #E38916) #E38916;*/
+  background: linear-gradient(#606060, #585858) #585858;
+  /*7F7F7F  7A7A7A */
+  transition: 0.2s;
+} 
+
+
 .nice_input_style {
     background-color: #404040;
     border: 2px solid #AAA;

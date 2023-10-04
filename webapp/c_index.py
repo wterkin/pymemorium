@@ -13,23 +13,6 @@ from webapp import c_constants as waconst
 from webapp import c_models as wamod
 from webapp import db_manager
 
-GRID_COLUMNS = [["ID", "id", 1, False, 0],
-                ["", "", 0, True, 7],
-                ["Всего", "ftotalcount", 2, True, 3],
-                ["Совм. с учёбой", "fcomblearning", 2, True, 8],
-                ["Совм. с восп. детей", "fcombparenting", 2, True, 10],
-                ["Женщин с детьми", "fwomanwithchildren", 2, True, 7],
-                ["Мат. помощь при рожд. ребёнка", "fchildbirth", 2, True, 16],
-                ["Инд. график", "findividualschedule", 2, True, 6],
-                ["Дети дошк. возр.", "fshortenedweek", 2, True, 8],
-                ["Дети до 14 лет", "fvacationpriorityright", 2, True, 7],
-                ["Возм. обуч.", "flearningopportunity", 2, True, 6],
-                ["Иные причины-1", "fotherdescription1", 0, True, 8],
-                ["Кол-во", "fothervalue1", 2, True, 3],
-                ["Иные причины-2", "fotherdescription2", 0, True, 8],
-                ["Кол-во", "fothervalue2", 2, True, 3]
-                ]
-
 ALIGNS = ("align_left", "align_center", "align_right")
 
 
@@ -75,7 +58,7 @@ def update_content():
     return render_template(waconst.INDEX_PAGE,
                            param_data=data_list,
                            param_tags=tags_list,
-                           param_delete_record_id=2,
+                           param_delete_record_id=-1,
                            param_frames=frames,
                            param_part_frame=part_frame,
                            param_part_frame_size=part_frame_size,
@@ -83,7 +66,8 @@ def update_content():
                            param_part_page_size=part_page_size,
                            param_framesize=waconst.PAGER_FRAMESIZE,
                            param_pagesize=waconst.PAGER_PAGESIZE,
-                           param_records=len(data_list)
+                           param_records=len(data_list),
+                           param_folder= wacfg.Config.DOCUMENTS_PATH
                            )
 
 
@@ -114,27 +98,46 @@ def pager_recalc(precords):
         part_page = True
         # *** Рассчитаем к-во записей на последней странице ???
         part_page_size = (part_frame_records - part_frame_size * waconst.PAGER_PAGESIZE)
-    return frames, part_frame, part_frame_size, \
-           part_page, part_page_size
+    return frames, part_frame, part_frame_size, part_page, part_page_size
 
 
 def index_get():
     """Обработчик запросов GET."""
     print("* IDX:GET *")
     session[waconst.SESSION_IDX_FILTER_STATE] = False
+    print(session[waconst.SESSION_IDX_FILTER_STATE])
     session[waconst.SESSION_APPLICATION_NAME] = wacfg.Config.APPLICATION_NAME
     return update_content()
 
 
-def index_post():
+def index_post(prequest):
     """Обработчик запросов POST."""
-    print("* IDX:POST *")
+    record_id: int = -1
+    record_id_value: int = prequest.form.get("hidden_id")
+    if record_id_value is not None:
+
+        record_id = int(record_id_value)
+
+    print(f"* IDX:POST * {record_id}")
+    print(prequest)
+    if prequest.form.get(waconst.INDEX_TOOLBAR_FILTER_BUTTON):
+
+        session[waconst.SESSION_IDX_FILTER_STATE] = not session[waconst.SESSION_IDX_FILTER_STATE]
+        print("<!!! filter button !!!>")
+        print(session[waconst.SESSION_IDX_FILTER_STATE])
+        # return append_record()
+    """
+    # *** Кнопка добавления записи
+    # *** Кнопка удаления записи
+    elif request.form.get(wconst.INDEX_DELETE_KEY):
+
+        return delete_record(record_id)
+    """
     return update_content()
 
 
 @application.route(waconst.INDEX_PAGE_URL, methods=["GET", "POST"])
 @application.route("/", methods=["GET", "POST"])
-# @wa_prc.login_required
 def index():
     """Обработчик запросов GET/POST."""
 
@@ -143,4 +146,4 @@ def index():
         return index_get()
     elif request.method == 'POST':
 
-        return index_post()
+        return index_post(request)

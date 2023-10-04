@@ -17,7 +17,7 @@ class Config:
     # *** Естественно, секретный ключ
     SECRET_KEY: str = os.urandom(24)
     # *** Выводить ли тексты запросов при работе Алхимии?
-    ALCHEMY_ECHO: int = 1
+    ALCHEMY_ECHO: int = 0
     # *** Параметры БД
     DB_PATH: str = "D:\\home\\YandexDisk\\Private\\app_data\\PyMemorium\\"
     DB_NAME: str = "pymemorium.db"
@@ -28,3 +28,4 @@ class Config:
     FORMATSTR: str = ("%(asctime)s %(levelname)s: "
                       "%(message)s [in %(pathname)s:%(lineno)d]")
     # SOURCE_PATH = "/home/template/Dropbox/notebook"
+    DOCUMENTS_PATH: str = "D:/home/documentation/"

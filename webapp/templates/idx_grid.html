@@ -111,13 +111,13 @@
                 {{ record.fnoteobj.fname }}
               {% elif record.ftype == 2 %}
 
-                {{ record.fdocumentobj.fdescription }}
+                <a href="{{param_folder}}{{record.fdocumentobj.ffolderobj.fpath}}{{record.fdocumentobj.fdocument}}">{{ record.fdocumentobj.fdescription }}</a>
               {% elif record.ftype == 3 %}
 
-                {{ record.fweblinkobj.fname }}
+                <a href="{{record.fweblinkobj.flink}}">{{ record.fweblinkobj.fname }}</a>
               {% endif %}
             </td>
-            <td>[{{ param_tags[loop.index-1] }}]</td>
+            <td> [{{ param_tags[loop.index-1] }}]</td>
           </tr>
           </form>
         {% endfor %}
