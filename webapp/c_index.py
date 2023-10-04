@@ -47,24 +47,19 @@ def main_query():
         tags: list = []
         tagline: str = " "
         tag_query = db_manager.session.query(wamod.CTagLink)
-        tag_query = tag_query.filter(wamod.CTagLink.frecord==item.id)
-        tag_query = tag_query.outerjoin(wamod.CTag, wamod.CTagLink.ftag==wamod.CTag.id )
+        tag_query = tag_query.filter(wamod.CTagLink.frecord == item.id)
+        tag_query = tag_query.outerjoin(wamod.CTag, wamod.CTagLink.ftag == wamod.CTag.id)
         for tag in tag_query.all():
-
             tags.append(tag.ftagobj.fname)
         if len(tags) > 0:
-
             tagline = ", ".join(tags)
         tags_list.append(tagline)
         if item.ftype == waconst.DB_WEBLINK_TYPE:
-
             print(f"*** {item.fweblinkobj.fname} [{tagline}] ****")
 
         if item.ftype == waconst.DB_DOCUMENT_TYPE:
-
             print(f"*** {item.fdocumentobj.fdescription}  [{tagline}] ***")
         if item.ftype == waconst.DB_NOTE_TYPE:
-
             print(f"*** {item.fnoteobj.fname} [{tagline}] ***")
     return result, tags_list
 
@@ -72,15 +67,23 @@ def main_query():
 def update_content():
     """Обновляет выборку данных с новыми параметрами."""
     data_list, tags_list = main_query()
-    # param_frames param_framesize
-    # param_pagesize
-    # param_part_frame param_part_frame_size
-    # param_part_page
+    # param_frames param_part_frame param_part_frame_size param_part_page param_framesize param_pagesize
     # param_records
+    frames, part_frame, part_frame_size, part_page, part_page_size = pager_recalc(len(data_list))
+    session[waconst.SESSION_IDX_FRAME_NUMBER] = 0
+    session[waconst.SESSION_IDX_PAGE_NUMBER] = 0
     return render_template(waconst.INDEX_PAGE,
                            param_data=data_list,
                            param_tags=tags_list,
-                           param_delete_record_id=2
+                           param_delete_record_id=2,
+                           param_frames=frames,
+                           param_part_frame=part_frame,
+                           param_part_frame_size=part_frame_size,
+                           param_part_page=part_page,
+                           param_part_page_size=part_page_size,
+                           param_framesize=waconst.PAGER_FRAMESIZE,
+                           param_pagesize=waconst.PAGER_PAGESIZE,
+                           param_records=len(data_list)
                            )
 
 
@@ -107,13 +110,12 @@ def pager_recalc(precords):
         part_frame_size = int(part_frame_records / waconst.PAGER_PAGESIZE)
     # *** Если к-во зап. в выборке не делится нацело на к-во зап. на странице
     if precords % waconst.PAGER_PAGESIZE > 0:
-
         # *** Увеличиваем к-во страниц в неполном фрейме на 1
         part_page = True
         # *** Рассчитаем к-во записей на последней странице ???
         part_page_size = (part_frame_records - part_frame_size * waconst.PAGER_PAGESIZE)
     return frames, part_frame, part_frame_size, \
-        part_page, part_page_size
+           part_page, part_page_size
 
 
 def index_get():
