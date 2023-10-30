@@ -123,7 +123,7 @@ def index_post(prequest):
     if prequest.form.get(waconst.INDEX_TOOLBAR_FILTER_BUTTON):
 
         session[waconst.SESSION_IDX_FILTER_STATE] = not session[waconst.SESSION_IDX_FILTER_STATE]
-        print("<!!! filter button !!!>")
+        print(f"[{waconst.INDEX_TOOLBAR_FILTER_BUTTON}]")
         print(session[waconst.SESSION_IDX_FILTER_STATE])
         # return append_record()
     """
