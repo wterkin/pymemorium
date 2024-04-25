@@ -19,13 +19,13 @@ class Config:
     # *** Выводить ли тексты запросов при работе Алхимии?
     ALCHEMY_ECHO: int = 0
     # *** Параметры БД
-    DB_PATH: str = "D:\\home\\YandexDisk\\Private\\app_data\\PyMemorium\\"
+    DB_PATH: str = "./"
     DB_NAME: str = "pymemorium.db"
     SQLALCHEMY_DATABASE_URI: str = f"sqlite:///{DB_PATH}{DB_NAME}"
     # *** Параметры логов
     LOG_SIZE: int = 1024 * 1024
-    LOGS_PATH: str = "D:\\home\\projects\\pymemorium\\logs\\main.log"
+    LOGS_PATH: str = "./logs\\main.log"
     FORMATSTR: str = ("%(asctime)s %(levelname)s: "
                       "%(message)s [in %(pathname)s:%(lineno)d]")
     # SOURCE_PATH = "/home/template/Dropbox/notebook"
-    DOCUMENTS_PATH: str = "D:/home/documentation/"
+    DOCUMENTS_PATH: str = "./documentation/"
