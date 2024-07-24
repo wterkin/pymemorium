@@ -7,11 +7,10 @@ from flask import session
 # from flask import redirect
 # from flask import url_for
 
-from webapp import application
+from webapp import application as wapp
 from webapp import c_config as wacfg
 from webapp import c_constants as waconst
 from webapp import c_models as wamod
-from webapp import db_manager
 
 ALIGNS = ("align_left", "align_center", "align_right")
 
@@ -19,7 +18,7 @@ ALIGNS = ("align_left", "align_center", "align_right")
 def main_query():
     """Возвращает выборку данных в соответствии с установками."""
     data_list: list = []
-    query = db_manager.session.query(wamod.CStorage)
+    query = wapp.config["SESSION"].query(wamod.CStorage)
     # query = query.outerjoin(wamod.CTagLink, wamod.CTagLink.frecord == wamod.CStorage.id)
     # query = query.join(wamod.CTag, wamod.CTagLink.ftag == wamod.CTag.id)
     # , wamod.CTagLink, wamod.CTag
@@ -29,20 +28,25 @@ def main_query():
 
         tags: list = []
         tagline: str = " "
-        tag_query = db_manager.session.query(wamod.CTagLink)
+        tag_query = wapp.config["SESSION"].query(wamod.CTagLink)
         tag_query = tag_query.filter(wamod.CTagLink.frecord == item.id)
         tag_query = tag_query.outerjoin(wamod.CTag, wamod.CTagLink.ftag == wamod.CTag.id)
         for tag in tag_query.all():
+            
             tags.append(tag.ftagobj.fname)
         if len(tags) > 0:
+            
             tagline = ", ".join(tags)
         tags_list.append(tagline)
         if item.ftype == waconst.DB_WEBLINK_TYPE:
+            
             print(f"*** {item.fweblinkobj.fname} [{tagline}] ****")
 
         if item.ftype == waconst.DB_DOCUMENT_TYPE:
+            
             print(f"*** {item.fdocumentobj.fdescription}  [{tagline}] ***")
         if item.ftype == waconst.DB_NOTE_TYPE:
+            
             print(f"*** {item.fnoteobj.fname} [{tagline}] ***")
     return result, tags_list
 
@@ -136,8 +140,8 @@ def index_post(prequest):
     return update_content()
 
 
-@application.route(waconst.INDEX_PAGE_URL, methods=["GET", "POST"])
-@application.route("/", methods=["GET", "POST"])
+@wapp.route(waconst.INDEX_PAGE_URL, methods=["GET", "POST"])
+@wapp.route("/", methods=["GET", "POST"])
 def index():
     """Обработчик запросов GET/POST."""
 

@@ -5,19 +5,17 @@ from flask import Flask  # noqa
 
 # *** Конфиг приложения
 from webapp import c_config as wacfg
-from webapp import c_database as wadb
+from webapp import c_models as wamod  # noqa: E402,F401
 
 # *** Создадим экземпляр приложения
 application: Flask = Flask(__name__)
 application.config.from_object(wacfg.Config)
 
 # *** Создаем объект менеджера базы данных
-db_manager = wadb.CDatabaseManager()
-
-from webapp import c_models as wamod  # noqa: E402,F401
 
 # *** Нужно ли логирование?
 if not application.debug:
+    
     import logging
     from logging.handlers import RotatingFileHandler
 

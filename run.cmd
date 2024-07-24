@@ -1,1 +1,1 @@
-D:\langs\python-3.11.2\environments\flask\Scripts\python.exe main.py
+D:\langs\python\env\flask\Scripts\python.exe main.py

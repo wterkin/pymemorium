@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 """Модуль конфигурации приложения."""
 import os
-
+from pathlib import Path
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+# from webapp import application as webapp
+from webapp import c_models as wamod
 
 class Config:
     # *** Название приложения
@@ -22,6 +26,18 @@ class Config:
     DB_PATH: str = "./"
     DB_NAME: str = "pymemorium.db"
     SQLALCHEMY_DATABASE_URI: str = f"sqlite:///{DB_PATH}{DB_NAME}"
+    SQLALCHEMY_COMMIT_ON_TEARDOWN: bool = True
+    ENGINE = create_engine(SQLALCHEMY_DATABASE_URI,
+                           echo=False,
+                           pool_pre_ping=True,
+                          )
+    META_DATA = wamod.Base.metadata
+    SESSION_MAKER = sessionmaker()
+    SESSION_MAKER.configure(bind=ENGINE)
+    SESSION = SESSION_MAKER()
+    if Path(DB_PATH + DB_NAME).exists():
+
+        wamod.Base.metadata.create_all(ENGINE)
     # *** Параметры логов
     LOG_SIZE: int = 1024 * 1024
     LOGS_PATH: str = "./logs\\main.log"
