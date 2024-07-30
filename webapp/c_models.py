@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Модуль классов моделей таблиц БД."""
 
+
 from datetime import datetime
 
 from sqlalchemy import Column, ForeignKey, Integer, String, \
